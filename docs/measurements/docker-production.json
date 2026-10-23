@@ -1,0 +1,1994 @@
+{
+  "date": "2026-10-23T15:26:01.680Z",
+  "runtime": "Docker production Next standalone Node24 bookworm; real local Odoo17/Postgres16; Chromium156; one client; warm runs; shared cloud",
+  "dashboardResourceBytes": {
+    "jsDecoded": 561852,
+    "jsTransfer": 0,
+    "cssDecoded": 53235
+  },
+  "browser": {
+    "dashboard": {
+      "samples": [
+        938,
+        411,
+        444,
+        402,
+        431
+      ],
+      "medianMs": 431,
+      "maxMs": 938
+    },
+    "task": {
+      "samples": [
+        900,
+        880,
+        890,
+        883,
+        885
+      ],
+      "medianMs": 885,
+      "maxMs": 900
+    },
+    "search": {
+      "samples": [
+        314,
+        412,
+        308,
+        292,
+        325
+      ],
+      "medianMs": 314,
+      "maxMs": 412
+    },
+    "saveTask": {
+      "samples": [
+        402,
+        904,
+        418
+      ],
+      "medianMs": 418,
+      "maxMs": 904
+    }
+  },
+  "api": {
+    "dashboard": {
+      "samples": [
+        204,
+        190,
+        214,
+        208,
+        198
+      ],
+      "medianMs": 204,
+      "maxMs": 214
+    },
+    "tasks?q=kiem%20tra%20ho%20so": {
+      "samples": [
+        83,
+        74,
+        70,
+        73,
+        73
+      ],
+      "medianMs": 73,
+      "maxMs": 83
+    },
+    "tasks/2": {
+      "samples": [
+        164,
+        165,
+        165,
+        165,
+        171
+      ],
+      "medianMs": 165,
+      "maxMs": 171
+    },
+    "notifications": {
+      "samples": [
+        419,
+        426,
+        412,
+        423,
+        434
+      ],
+      "medianMs": 423,
+      "maxMs": 434
+    }
+  },
+  "growth": [
+    {
+      "tasks": 0,
+      "samples": [
+        48,
+        48,
+        56,
+        56,
+        50
+      ],
+      "medianMs": 50,
+      "maxMs": 56,
+      "scanned": 0,
+      "scanLimited": false,
+      "nextCursor": null
+    },
+    {
+      "tasks": 100,
+      "samples": [
+        113,
+        117,
+        126,
+        105,
+        106
+      ],
+      "medianMs": 113,
+      "maxMs": 126,
+      "scanned": 100,
+      "scanLimited": false,
+      "nextCursor": null
+    },
+    {
+      "tasks": 500,
+      "samples": [
+        316,
+        332,
+        319,
+        314,
+        310
+      ],
+      "medianMs": 316,
+      "maxMs": 332,
+      "scanned": 500,
+      "scanLimited": false,
+      "nextCursor": null
+    },
+    {
+      "tasks": 1100,
+      "samples": [
+        552,
+        566,
+        598,
+        574,
+        568
+      ],
+      "medianMs": 568,
+      "maxMs": 598,
+      "scanned": 1000,
+      "scanLimited": true,
+      "nextCursor": 1000
+    }
+  ],
+  "allClientChunks": {
+    "files": 12,
+    "rawBytes": 1109003,
+    "gzipBytes": 346845,
+    "note": "All generated client chunks, including lazily loaded editor and routes; not initial transfer."
+  },
+  "jsErrors": [],
+  "failedRequests": [
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/search",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/search",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/search",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/search",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/4",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/4",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/4",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/4",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/4",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/search",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/activities",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/5",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/3",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/my-tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/notifications",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/discuss",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/documents",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/bookmarks",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/settings",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/recent",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/tasks/1",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/projects/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/tasks/2",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": true
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    },
+    {
+      "path": "/api/tasks/2/messages",
+      "type": "fetch",
+      "reason": "net::ERR_ABORTED",
+      "prefetch": false
+    }
+  ],
+  "httpErrors": [],
+  "networkSummary": {
+    "aborted": 303,
+    "otherFailures": 0,
+    "prefetchAborts": 293
+  }
+}

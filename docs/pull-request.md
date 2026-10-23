@@ -1,11 +1,16 @@
-# Odoo 17 Smart Workspace: tìm kiếm và điều hướng nhiệm vụ theo quyền
+# Odoo 17 Smart Workspace: tìm kiếm bàn phím và giao diện nhiệm vụ responsive
 
-Repository ban đầu trống. Thay đổi bổ sung ứng dụng Next.js tiếng Việt để nhân viên đăng nhập bằng danh tính Odoo riêng, tìm nhiệm vụ bằng đoạn tiêu đề/tiếng Việt không dấu và mở đúng task với ngữ cảnh dự án/cha/con. Task, Chatter và attachment được đọc/ghi trực tiếp bằng XML-RPC Odoo 17; PostgreSQL chỉ giữ session mã hóa và metadata phụ trợ.
+Bổ sung ứng dụng Next.js tiếng Việt để mỗi nhân viên đăng nhập bằng danh tính Odoo riêng, tìm nhiệm vụ bằng đoạn tiêu đề/tiếng Việt không dấu, phân biệt tên trùng theo dự án và mở task với breadcrumb cha/con xuyên dự án. Dữ liệu dự án, task, Chatter, Discuss và file đi qua XML-RPC Odoo 17; PostgreSQL chỉ giữ phiên mã hóa, metadata chống gửi trùng, lịch sử/đánh dấu và tùy chọn giao diện theo instance/UID.
 
-Sửa task yêu cầu addon bridge để kiểm tra revision nguyên tử, tránh ghi đè khi nhiều người cùng sửa. Có chế độ chỉ đọc, chống CSRF, sanitization, đối chiếu attachment và idempotency cho thao tác tạo. Discuss đọc/gửi/search vào các hội thoại đã tham gia khi API cho phép; notification deep link đúng task/comment hoặc channel, tái kiểm tra ACL. Phần tạo/join kênh và tệp Discuss dùng Odoo gốc.
+Giao diện dùng Inter tự host, token Indigo và Lucide. Ctrl/Cmd+K có gợi ý, ↑/↓/Enter, highlight và bộ lọc URL. Dashboard có số đếm ORM dẫn tới dữ liệu thật; Task có ba vùng đổi kích thước/thu gọn, chuyển hai vùng hoặc tabs trên laptop/mobile. Editor tải khi mở, giữ draft và revision gốc; menu có focus trap, banner ngoại tuyến/kết nối lại và thông báo thao tác. Notification lọc trạng thái/đối tượng/subtype Odoo, deep link đúng task/comment/channel.
 
-Validation thực tế và phần chưa nghiệm thu được ghi ở `docs/validation.md` và `docs/acceptance.md`. Không có secret, volume hoặc credential được đưa vào source. Không sửa dữ liệu máy chủ doanh nghiệp; public version của URL người dùng xác nhận Odoo 17 Enterprise, còn thiếu database/staging account để nghiệm thu.
+Ghi task cần addon bridge kiểm tra revision nguyên tử; có chế độ chỉ đọc, CSRF, HTML sanitization, ACL đối tượng/file và idempotency. Hai nhân viên được kiểm tra nhận/gửi thông báo, cập nhật qua polling và từ chối bản sửa lỗi thời. Chưa có realtime bus, SSO, kéo thả Kanban, quản lý thành viên/tệp/unread Discuss; các thao tác này dẫn sang Odoo gốc khi có hỗ trợ.
 
-Docker development/production, CI và hướng dẫn Việt ngữ nằm trong README. Workflow CI remote và triển khai HTTPS doanh nghiệp cần được chạy độc lập sau khi repository và hạ tầng sẵn sàng.
+Validation và hướng dẫn sử dụng:
 
-Đã kiểm thử: typecheck và production build; 6 unit, 24 integration với Odoo 17/PostgreSQL thật, 3 browser checks. GitHub Actions run 39967007750 đã success trên checkout mới ở commit 4a3360e. Startup development cũng đã qua kiểm tra đăng nhập/tìm kiếm/điều hướng.
+- [Kết quả kiểm thử](docs/validation.md): typecheck/build, unit, real Odoo/Postgres integration và browser suites; CI chạy trên checkout mới và lưu artifact.
+- [Rà soát UX, ảnh 7 màn hình × 3 viewport và tự kiểm thử A–H](docs/ux-review.md). Chuẩn ảnh được cố định browser/font/locale/timezone/fixture; CI không tự cập nhật baseline.
+- [Số đo production local](docs/performance.md): Dashboard trung vị 400ms, Task 868ms, tìm kiếm theo URL 298ms; thí nghiệm 0/100/500/1100 task cho thấy giới hạn quét 1000/lượt và continuation. Không coi là SLA doanh nghiệp.
+- [Chạy local/Docker](README.md), [staging và triển khai nhiều nhân viên](docs/deployment.md).
+
+Máy chủ người dùng phản hồi public version Odoo 17 Enterprise; chưa có database, xác nhận staging và danh tính test để nghiệm thu nghiệp vụ doanh nghiệp. Không ghi thử production. Không đưa secret, volume, credential hoặc mock runtime vào mã sản phẩm; nhánh main được giữ nguyên.

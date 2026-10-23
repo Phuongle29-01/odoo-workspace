@@ -1,7 +1,7 @@
 import sanitize from 'sanitize-html';
 import { z } from 'zod';
 import { AppError, denied } from './errors';
-import { Odoo, relationId, selectFields, type RecordData } from './odoo';
+import { Odoo, relationId, selectFields, type RecordData, type Fields } from './odoo';
 import { config } from './config';
 import { pool } from './db';
 
@@ -58,12 +58,12 @@ const taskFields = [
   'child_ids',
 ];
 
-export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number) {
-  const metadata = await odoo.fields('project.task');
-  const fields = selectFields(
-    metadata,
-    taskFields.filter((f) => f !== 'description' && f !== 'child_ids'),
-  );
+export async function taskDomain(
+  odoo: Odoo,
+  params: URLSearchParams,
+  uid: number,
+  metadata: Fields,
+) {
   const domain: unknown[] = [];
   if (params.get('project'))
     domain.push([
@@ -74,6 +74,85 @@ export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number)
   if (params.get('stage'))
     domain.push(['stage_id', '=', z.coerce.number().int().positive().parse(params.get('stage'))]);
   if (params.get('mine') === 'true') domain.push(['user_ids', 'in', [uid]]);
+  if (params.get('assignee'))
+    domain.push([
+      'user_ids',
+      'in',
+      [z.coerce.number().int().positive().parse(params.get('assignee'))],
+    ]);
+  if (params.get('state')) {
+    const state = z.string().max(80).parse(params.get('state'));
+    if (!metadata.state?.selection?.some(([key]) => key === state))
+      throw new AppError(400, 'INVALID_STATE', 'Trạng thái không có trong cấu hình Odoo.');
+    domain.push(['state', '=', state]);
+  }
+  if (params.get('open') === 'true') {
+    const closed =
+      metadata.state?.selection
+        ?.map(([v]) => v)
+        .filter((v) => ['1_done', '1_canceled'].includes(v)) || [];
+    if (closed.length) domain.push(['state', 'not in', closed]);
+  }
+  if (params.get('overdue') === 'true') {
+    if (!metadata.date_deadline)
+      throw new AppError(400, 'UNSUPPORTED_FILTER', 'Odoo không có trường hạn nhiệm vụ.');
+    const user = await odoo.read('res.users', uid, ['tz']);
+    let today: string;
+    try {
+      today = new Intl.DateTimeFormat('en-CA', {
+        timeZone: typeof user.tz === 'string' ? user.tz : 'Asia/Ho_Chi_Minh',
+      }).format(new Date());
+    } catch {
+      today = new Date().toISOString().slice(0, 10);
+    }
+    domain.push(['date_deadline', '<', today]);
+    const closed =
+      metadata.state?.selection
+        ?.map(([v]) => v)
+        .filter((v) => ['1_done', '1_canceled'].includes(v)) || [];
+    if (closed.length) domain.push(['state', 'not in', closed]);
+  }
+  return domain;
+}
+export async function decorateTasks(odoo: Odoo, rows: RecordData[], metadata: Fields) {
+  const ids = [
+    ...new Set(rows.flatMap((r) => (Array.isArray(r.user_ids) ? (r.user_ids as number[]) : []))),
+  ];
+  let users: RecordData[] = [];
+  if (ids.length)
+    try {
+      users = await odoo.search('res.users', [['id', 'in', ids]], ['name'], 200);
+    } catch (e) {
+      if (!(e instanceof AppError && e.status === 403)) throw e;
+    }
+  return rows.map((row) => ({
+    ...row,
+    stateLabel: metadata.state?.selection?.find(([key]) => key === row.state)?.[1] || '',
+    assignees: ((row.user_ids as number[]) || []).map((id) => ({
+      id,
+      name: users.find((u) => u.id === id)?.name || `Nhân viên #${id}`,
+    })),
+  }));
+}
+export async function taskOptions(odoo: Odoo) {
+  const fields = await odoo.fields('project.task');
+  const [projects, stages, users] = await Promise.all([
+    odoo.search('project.project', [], ['name'], 100, 0, 'name'),
+    odoo.search('project.task.type', [], ['name'], 100, 0, 'sequence,id'),
+    odoo.search('res.users', [['share', '=', false]], ['name'], 200, 0, 'name').catch((e) => {
+      if (e instanceof AppError && e.status === 403) return [];
+      throw e;
+    }),
+  ]);
+  return { projects, stages, users, states: fields.state?.selection || [] };
+}
+export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number) {
+  const metadata = await odoo.fields('project.task');
+  const fields = selectFields(
+    metadata,
+    taskFields.filter((f) => f !== 'description' && f !== 'child_ids'),
+  );
+  const domain = await taskDomain(odoo, params, uid, metadata);
   const cursor = z.coerce
     .number()
     .int()
@@ -83,9 +162,15 @@ export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number)
   const query = (params.get('q') || '').trim();
   if (query.length > 160) throw new AppError(400, 'QUERY_TOO_LONG', 'Từ khóa tối đa 160 ký tự.');
   if (!query) {
-    const rows = await odoo.search('project.task', domain, fields, 41, cursor);
+    const order =
+      params.get('sort') === 'updated'
+        ? 'write_date desc,id desc'
+        : params.get('sort') === 'deadline'
+          ? 'date_deadline asc,id desc'
+          : 'id desc';
+    const rows = await odoo.search('project.task', domain, fields, 41, cursor, order);
     return {
-      items: rows.slice(0, 40),
+      items: await decorateTasks(odoo, rows.slice(0, 40), metadata),
       nextCursor: rows.length > 40 ? cursor + 40 : null,
       mode: 'orm',
       scanLimited: false,
@@ -136,7 +221,7 @@ export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number)
     }
   }
   return {
-    items: found,
+    items: await decorateTasks(odoo, found, metadata),
     nextCursor: exhausted ? null : offset,
     mode: 'live-accent-scan',
     scanLimited: !exhausted,
@@ -333,6 +418,7 @@ export async function notifications(odoo: Odoo, uid: number) {
           'res_id',
           'author_id',
           'date',
+          'subtype_id',
         ]);
         if (message.model === 'discuss.channel') {
           const channel = await odoo.read('discuss.channel', Number(message.res_id), [

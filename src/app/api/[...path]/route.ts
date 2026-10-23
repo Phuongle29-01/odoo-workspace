@@ -9,6 +9,7 @@ import { pool, rateLimit, readyDb } from '@/server/db';
 import { AppError, denied } from '@/server/errors';
 import { mutate } from '@/server/mutations';
 import { channels, channelMessages, requireChannel } from '@/server/discuss';
+import { dashboard } from '@/server/dashboard';
 import {
   taskList,
   taskDetail,
@@ -19,6 +20,7 @@ import {
   attachment,
   notifications,
   cleanHtml,
+  taskOptions,
 } from '@/server/workspace';
 
 export const runtime = 'nodejs';
@@ -36,6 +38,15 @@ export async function GET(request: Request, context: Context) {
   return endpoint(async () => {
     const { odoo, uid, identity } = await session();
     const params = new URL(request.url).searchParams;
+    if (path[0] === 'dashboard') return dashboard(odoo, uid);
+    if (path[0] === 'task-options') return taskOptions(odoo);
+    if (path[0] === 'ui-preferences') {
+      const { rows } = await pool().query(
+        'SELECT value FROM workspace_ui_preferences WHERE identity=$1',
+        [identity],
+      );
+      return rows[0]?.value || {};
+    }
     if (path[0] === 'me') {
       const user = await odoo.read('res.users', uid, ['name', 'login', 'partner_id']);
       return {
@@ -67,6 +78,9 @@ export async function GET(request: Request, context: Context) {
           await odoo.search(model, [], ['id'], 1);
           checks[model] = {
             read: true,
+            write: await odoo.call<boolean>(model, 'check_access_rights', ['write'], {
+              raise_exception: false,
+            }),
             customFields: Object.keys(fields).filter((f) => f.startsWith('x_')),
             bridge: !!fields.workspace_revision,
           };
@@ -106,6 +120,20 @@ export async function GET(request: Request, context: Context) {
     if (path[0] === 'tasks' && !path[1]) return taskList(odoo, params, uid);
     if (path[0] === 'tasks' && path[1]) {
       const id = positiveId(path[1]);
+      if (path[2] === 'activities') {
+        await odoo.requireRecord('project.task', id);
+        return odoo.search(
+          'mail.activity',
+          [
+            ['res_model', '=', 'project.task'],
+            ['res_id', '=', id],
+          ],
+          ['summary', 'date_deadline', 'user_id', 'activity_type_id'],
+          50,
+          0,
+          'date_deadline,id',
+        );
+      }
       if (path[2] === 'messages')
         return chatter(
           odoo,
@@ -227,6 +255,23 @@ export async function POST(request: Request, context: Context) {
       return { loggedOut: true };
     }
     const { odoo, identity, uid } = await session();
+    if (path[0] === 'ui-preferences') {
+      const input = z
+        .object({
+          view: z.enum(['list', 'kanban', 'tree']).optional(),
+          navWidth: z.number().int().min(160).max(280).optional(),
+          collabWidth: z.number().int().min(280).max(420).optional(),
+          navOpen: z.boolean().optional(),
+          collabOpen: z.boolean().optional(),
+        })
+        .strict()
+        .parse(await body(request));
+      await pool().query(
+        'INSERT INTO workspace_ui_preferences(identity,value) VALUES($1,$2) ON CONFLICT(identity) DO UPDATE SET value=workspace_ui_preferences.value || $2::jsonb',
+        [identity, JSON.stringify(input)],
+      );
+      return { saved: true };
+    }
     if (path[0] === 'preferences') {
       const input = z
         .object({ taskId: z.number().int().positive(), bookmarked: z.boolean() })

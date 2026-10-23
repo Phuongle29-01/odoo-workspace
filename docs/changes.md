@@ -59,3 +59,11 @@ Repository ban đầu trống; các tệp nguồn sau được tạo trong nhán
 - `tests/unit/security.test.ts`
 - `tsconfig.json`
 - `vitest.config.ts`
+
+## Bản cải tiến UX và kiểm thử tiếp theo
+
+- Design tokens/Inter và responsive overrides: `src/app/tokens.css`, `workspace-ux.css`; các component dùng chung, smart search, task workbench, editor và dashboard tách khỏi shell.
+- Backend thêm dashboard counts, bộ lọc domain, task activities, state/assignee decoration và bảng `workspace_ui_preferences`; không đổi nguồn dữ liệu nghiệp vụ.
+- Tests: unit cho highlight/tz/filter, fixtures chỉ trong browser, UI/axe, collaboration thật, 21 screenshot baselines; CI giữ HTML report/diagnostics/trace khi lỗi.
+- `scripts/measure-performance.ts`, `docs/performance.md`, `docs/measurements/`, `docs/ux-review.md`, ảnh audit ban đầu ở `docs/ui-before/` và các ảnh chuẩn ở `tests/visual/snapshots/`.
+- Reusable cloud setup cài browser Playwright đúng lockfile; hướng dẫn startup giữ việc khởi động dịch vụ và kiểm tra nghiệp vụ riêng.

@@ -16,12 +16,26 @@ export function clearClientState() {
     if (key.startsWith('workspace-draft:')) sessionStorage.removeItem(key);
 }
 export async function api<T = unknown>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`/api/${path}`, {
-    ...options,
-    cache: 'no-store',
-    credentials: 'same-origin',
-    headers: { 'Content-Type': 'application/json', 'X-Workspace-Request': '1', ...options.headers },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`/api/${path}`, {
+      ...options,
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Workspace-Request': '1',
+        ...options.headers,
+      },
+    });
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw e;
+    throw new ApiError(
+      0,
+      'OFFLINE',
+      'Không thể kết nối. Bản nháp vẫn được giữ; kiểm tra mạng rồi thử lại.',
+    );
+  }
   const data = await res.json();
   if (!res.ok)
     throw new ApiError(
@@ -46,7 +60,7 @@ export async function write<T = unknown>(path: string, data: unknown, method = '
 export function useData<T>(path: string, enabled = true, interval: number | false = 30000) {
   return useQuery<T, ApiError>({
     queryKey: [path],
-    queryFn: () => api<T>(path),
+    queryFn: ({ signal }) => api<T>(path, { signal }),
     enabled,
     retry: false,
     staleTime: 0,

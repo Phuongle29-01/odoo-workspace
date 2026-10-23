@@ -10,6 +10,7 @@ Quy trình local mặc định, đã được kiểm thử:
 cd /workspace/odoo-workspace
 export npm_config_cache=/workspace/.cache/npm
 export NEXT_TELEMETRY_DISABLED=1
+export PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright
 chmod -R a+rX addons
 chmod a+r scripts/seed-odoo.py
 docker compose --env-file .env.local --profile local up -d --wait db odoo
@@ -24,10 +25,10 @@ Giữ dev server trong terminal chạy lâu dài. Từ terminal khác, kiểm tr
 
 ```bash
 cd /workspace/odoo-workspace
-npm run test:e2e -- --grep 'login, unaccented'
+npm run test:e2e -- --project=odoo --grep 'login, unaccented'
 ```
 
-Kiểm tra này đăng nhập tài khoản test local, tìm nhiệm vụ không dấu, mở cha/con khác dự án, refresh/back rồi logout. Không in giá trị LOCAL_TEST_PASSWORD_A/B. Chromium sẵn ở `/usr/bin/chromium`; nếu môi trường khác thì dùng browser được cài hợp lệ theo README. Không tạo preview/link localhost trong giao diện onboarding; chỉ báo kết quả bằng văn bản.
+Kiểm tra này đăng nhập tài khoản test local, tìm nhiệm vụ không dấu, mở cha/con khác dự án, refresh/back rồi logout. Không in giá trị LOCAL_TEST_PASSWORD_A/B. Playwright dùng Chromium đúng phiên bản trong lockfile tại `/workspace/.cache/ms-playwright`; nếu thiếu chạy `PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright npm exec playwright -- install chromium`. Không thay browser hệ thống cho suite visual. Không tạo preview/link localhost trong giao diện onboarding; chỉ báo kết quả bằng văn bản.
 
 Nếu `.env.local` chưa có, chạy `bash scripts/cloud-install.sh` để chuẩn bị local một lần. Nếu dependency bị thiếu hoặc lockfile thay đổi, dùng `npm ci`, không tự sửa lockfile. Để kiểm tra production build dùng `npm run build` rồi `npm start`; trước đó chỉ dừng dev server do mình khởi động. Để chạy image đã chuẩn bị, dừng dev server do mình khởi động rồi `docker compose --env-file .env.local --profile app --profile local up -d --no-build app` và kiểm tra nghiệp vụ lại.
 

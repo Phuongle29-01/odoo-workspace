@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/diagnostics';
 
 test.beforeAll(() => {
   if (
@@ -21,9 +21,11 @@ test('login, unaccented search, cross-project navigation, refresh and back', asy
   await expect(page.getByRole('link', { name: /Kiểm tra hồ sơ thiết kế/ }).first()).toBeVisible();
   await page.screenshot({ path: 'test-results/desktop-workspace.png', fullPage: true });
   await page.getByRole('link', { name: 'Tìm nhiệm vụ', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Từ khóa tìm nhiệm vụ' }).fill('kiem tra ho so thiet ke');
   await page
-    .getByRole('link', { name: /Kiểm tra hồ sơ thiết kế/ })
+    .getByRole('combobox', { name: 'Từ khóa tìm nhiệm vụ' })
+    .fill('kiem tra ho so thiet ke');
+  await page
+    .getByRole('option', { name: /Kiểm tra hồ sơ thiết kế/ })
     .first()
     .click();
   await expect(
@@ -71,8 +73,8 @@ test('mobile layout, theme and keyboard search', async ({ page }) => {
   await page.getByRole('button', { name: 'Chế độ tối' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.keyboard.press('Control+k');
-  await expect(page.getByRole('textbox', { name: 'Tìm kiếm toàn cục' })).toBeFocused();
-  await page.getByRole('textbox', { name: 'Tìm kiếm toàn cục' }).fill('ho so mat');
+  await expect(page.getByRole('combobox', { name: 'Tìm kiếm toàn cục' })).toBeFocused();
+  await page.getByRole('combobox', { name: 'Tìm kiếm toàn cục' }).fill('ho so mat');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'Chưa có nhiệm vụ phù hợp' })).toBeVisible();
   await page.screenshot({ path: 'test-results/mobile-workspace.png', fullPage: true });
@@ -89,26 +91,27 @@ test('task edits, chatter draft and file upload reach real Odoo', async ({ page 
     .first()
     .click();
   await page.getByRole('button', { name: 'Chỉnh sửa nhiệm vụ', exact: true }).click();
-  const original = await page.getByLabel('Mô tả (HTML an toàn)').inputValue();
+  const original = await page.getByRole('textbox', { name: 'Mô tả công việc' }).innerHTML();
   const marker = `Browser acceptance ${Date.now()}`;
-  await page.getByLabel('Mô tả (HTML an toàn)').fill(`<p>${marker}</p>`);
+  await page.getByRole('textbox', { name: 'Mô tả công việc' }).fill(marker);
   await page.getByRole('button', { name: 'Lưu vào Odoo', exact: true }).click();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   await page.getByRole('textbox', { name: 'Nội dung trao đổi' }).fill(marker);
   await page.getByRole('button', { name: 'Gửi', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Nội dung trao đổi' })).toHaveValue('');
   await page.getByRole('link', { name: 'Tài liệu', exact: true }).last().click();
-  await page
-    .getByLabel('Tải tệp đính kèm')
-    .setInputFiles({
-      name: 'browser-acceptance.txt',
-      mimeType: 'text/plain',
-      buffer: Buffer.from(marker),
-    });
+  await page.getByLabel('Tải tệp đính kèm').setInputFiles({
+    name: 'browser-acceptance.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from(marker),
+  });
   await expect(page.getByRole('link', { name: /browser-acceptance.txt/ }).first()).toBeVisible();
   await page.reload();
   await page.getByRole('button', { name: 'Chỉnh sửa nhiệm vụ', exact: true }).click();
-  await page.getByLabel('Mô tả (HTML an toàn)').fill(original);
+  await page.getByRole('textbox', { name: 'Mô tả công việc' }).evaluate((el, html) => {
+    el.innerHTML = html;
+    el.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+  }, original);
   await page.getByRole('button', { name: 'Lưu vào Odoo', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Chỉnh sửa nhiệm vụ', exact: true })).toBeVisible();
 });

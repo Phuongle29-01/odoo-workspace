@@ -96,6 +96,79 @@ try {
   });
   const A = a!,
     B = b!;
+  await check(
+    'employee view preferences are isolated, validated and survive a new session',
+    async () => {
+      const beforeA = await json(A, 'ui-preferences'),
+        beforeB = await json(B, 'ui-preferences');
+      try {
+        await json(A, 'ui-preferences', 'POST', { view: 'kanban', navWidth: 196 });
+        const second = await login('A');
+        assert.equal((await json(second, 'ui-preferences')).view, 'kanban');
+        assert.deepEqual(await json(B, 'ui-preferences'), beforeB);
+        assert.equal(
+          (await request(A, 'ui-preferences', 'POST', { identity: 'other', view: 'tree' })).status,
+          400,
+        );
+        assert.equal((await request(A, 'ui-preferences', 'POST', { navWidth: 5000 })).status, 400);
+      } finally {
+        await json(A, 'ui-preferences', 'POST', {
+          view: beforeA.view || 'list',
+          navWidth: beforeA.navWidth || 180,
+        });
+      }
+    },
+  );
+  await check(
+    'dashboard counts and decorated search results come from the current Odoo identity',
+    async () => {
+      const result = await json(A, 'dashboard');
+      assert.equal(
+        result.counts.projects,
+        await A.odoo.call('project.project', 'search_count', [[]]),
+      );
+      assert.equal(
+        result.counts.mine,
+        await A.odoo.call('project.task', 'search_count', [
+          [
+            ['user_ids', 'in', [A.uid]],
+            ['state', 'not in', ['1_done', '1_canceled']],
+          ],
+        ]),
+      );
+      const rows = (await json(A, `tasks?assignee=${A.uid}&project=${ids.projects[1]}`)).items;
+      assert.ok(rows.some((t: { id: number }) => t.id === ids.child));
+      for (const row of rows) {
+        assert.ok(row.user_ids.includes(A.uid));
+        assert.ok(row.stateLabel);
+        assert.ok(
+          row.assignees.some((u: { id: number; name: string }) => u.id === A.uid && u.name),
+        );
+      }
+      assert.equal((await request(A, 'tasks?state=unknown')).status, 400);
+      const options = await json(B, 'task-options');
+      assert.ok(!options.projects.some((p: { name: string }) => p.name === 'Hồ sơ hạn chế'));
+    },
+  );
+  await check('multilevel child retains every ancestor across projects', async () => {
+    const grandchild = await admin.call<number>('project.task', 'create', [
+      {
+        name: 'Temporary multilevel acceptance',
+        parent_id: ids.child,
+        project_id: ids.projects[0],
+      },
+    ]);
+    try {
+      const detail = await json(A, `tasks/${grandchild}`);
+      assert.deepEqual(
+        detail.ancestors.map((a: { id: number }) => a.id),
+        [ids.parent, ids.child],
+      );
+      assert.equal(detail.task.project_id[0], ids.projects[0]);
+    } finally {
+      await admin.call('project.task', 'unlink', [[grandchild]]);
+    }
+  });
   await check('no unauthenticated task access', async () => {
     assert.equal((await request(null, `tasks/${ids.child}`)).status, 401);
   });

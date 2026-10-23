@@ -33,6 +33,9 @@ export async function migrate() {
       identity text NOT NULL, task_id integer NOT NULL, bookmarked boolean NOT NULL DEFAULT false,
       visited_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(identity, task_id)
     );
+    CREATE TABLE IF NOT EXISTS workspace_ui_preferences (
+      identity text PRIMARY KEY, value jsonb NOT NULL DEFAULT '{}'::jsonb
+    );
   `);
 }
 export async function readyDb() {

@@ -1,6 +1,8 @@
 # Odoo Smart Workspace
 
-Web app tiếng Việt kết nối **Odoo 17** bằng XML-RPC. Odoo giữ toàn bộ dữ liệu dự án/nhiệm vụ; PostgreSQL bổ trợ chỉ lưu phiên mã hóa, metadata chống gửi trùng, đánh dấu và lịch sử truy cập.
+Web app tiếng Việt kết nối **Odoo 17** bằng XML-RPC. Odoo giữ toàn bộ dữ liệu dự án/nhiệm vụ; PostgreSQL bổ trợ chỉ lưu phiên mã hóa, metadata chống gửi trùng, đánh dấu và lịch sử truy cập và tùy chọn giao diện riêng theo tài khoản.
+
+Bản giao diện mới: [ảnh trước/sau, tự kiểm thử A–H và giới hạn](docs/ux-review.md), [số đo hiệu năng](docs/performance.md), [kết quả xác minh](docs/validation.md).
 
 Đã có đăng nhập cá nhân, tìm kiếm toàn cục không dấu, breadcrumb cha/con khác dự án, danh sách/Kanban/cây, chỉnh sửa nguyên tử qua addon, tạo nhiệm vụ con, Chatter và tệp đính kèm. Xem phạm vi và giới hạn ở [nghiệm thu](docs/acceptance.md), [kiến trúc](docs/architecture.md), [khảo sát repository](docs/repository-audit.md).
 
@@ -73,7 +75,11 @@ npm run test:integration
 npm run test:e2e
 ```
 
-Browser tests mặc định dùng Chromium `/usr/bin/chromium`. Nếu chưa có, chạy `npx playwright install chromium` và đặt `CI=true` để dùng browser Playwright cài, hoặc đặt `PLAYWRIGHT_CHROMIUM_EXECUTABLE` tới Chromium được cài hợp lệ. Không tắt kiểm tra TLS/chữ ký khi cài phụ thuộc.
+Cài đúng Chromium đi kèm lockfile bằng `npx playwright install chromium` (Linux thiếu thư viện hệ thống: `npx playwright install --with-deps chromium`). Cloud dùng `PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright`; config tự nhận cache này khi tồn tại. Không thay browser hệ thống trong suite visual.
+
+`npm run test:ui` chạy mock browser + accessibility, `npm run test:visual` so sánh 21 chuẩn ảnh, `npm run test:e2e -- --project=odoo` chỉ chạy browser/Odoo thật. `npm run test:e2e` chạy cả ba nhóm. Mock chỉ chặn request trong Playwright; API lạ trong fixture trả 501. HTML report ở `playwright-report/`, screenshot/diagnostics/trace ở `test-results/`; CI upload artifact trong 14 ngày. Không cập nhật chuẩn ảnh khi lỗi chưa được giải thích.
+
+Sau khi dừng các suite khác, dùng production `npm start` và `npm run measure:performance` để đo local thực, tạo dữ liệu riêng 0/100/500/1100 task và dọn trong `finally`. Không chạy công cụ này lên production/staging doanh nghiệp; có guard local `workspace_test`.
 
 Integration thực sự gọi app → XML-RPC → Odoo 17 + PostgreSQL: hai tài khoản, ACL, tìm kiếm, cập nhật đồng thời, thu hồi quyền, upload/download, chatter/idempotency, timeout/reconnect, expiry/logout. Không thay integration bằng mock. Tài khoản admin chỉ dùng seed/thu hồi quyền fixture trong database local; runtime không dùng tài khoản này.
 
