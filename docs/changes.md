@@ -1,6 +1,6 @@
 # Danh sách tệp bàn giao
 
-Repository ban đầu trống; các tệp nguồn sau được tạo trong nhánh `feature/odoo17-smart-workspace`. Không bao gồm secret, node_modules, build output, browser reports hoặc volume dữ liệu.
+Repository ban đầu trống; các tệp nguồn sau được tạo trong nhánh `feature/odoo17-smart-workspace`. Không bao gồm secret, node_modules, build output, browser reports hoặc volume dữ liệu. AGENTS.md do Next.js development sinh và đã được đọc/xác minh.
 
 - `.dockerignore`
 - `.env.example`
@@ -21,6 +21,7 @@ Repository ban đầu trống; các tệp nguồn sau được tạo trong nhán
 - `docs/acceptance.md`
 - `docs/architecture.md`
 - `docs/changes.md`
+- `docs/cloud-start.md`
 - `docs/deployment.md`
 - `docs/pull-request.md`
 - `docs/repository-audit.md`

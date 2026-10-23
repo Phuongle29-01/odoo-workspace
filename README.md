@@ -105,8 +105,8 @@ Xem [hướng dẫn triển khai](docs/deployment.md). Nhân viên chỉ truy c�
 
 ## Fork/clone sang tài khoản khác
 
-Quyền riêng tư repository chưa xác minh được vì GitHub API trong cloud trả 403; Git read vẫn hoạt động. Trước khi chia sẻ/fork, chủ repository phải kiểm tra visibility và chính sách tổ chức. Chỉ fork hoặc tạo bản sao khi có quyền, nhất là repository private.
+GitHub API đã xác nhận repository này là **private**. Chỉ fork hoặc tạo bản sao khi được chủ sở hữu và chính sách tổ chức cho phép. Không thay visibility hoặc chia sẻ mã nguồn/dữ liệu ra ngoài phạm vi được cấp quyền.
 
 Sau khi fork được phép: clone URL của bản fork; kiểm tra `git remote -v` trên máy riêng (không đưa URL chứa credential vào log), đặt `origin` tới bản fork và tùy chọn `upstream` tới repository gốc. Chọn nhánh tính năng, chạy `npm ci` và `npm run local:prepare`, dựng Odoo test riêng rồi thực hiện các bước local ở trên. Khi triển khai server mới, sinh secret mới và cấu hình Odoo staging riêng. Không copy `.env.local`, volume Odoo/Postgres, dữ liệu hoặc secret production sang repository/tài khoản mới.
 
-CI GitHub Actions được thêm trong `.github/workflows/ci.yml`; kết quả chạy trên GitHub chỉ được xác nhận sau khi workflow thực sự chạy ở remote.
+CI GitHub Actions nằm trong `.github/workflows/ci.yml`; [run đầu tiên đã thành công](https://github.com/Phuongle29-01/odoo-workspace/actions/runs/39967007750) trên checkout mới. Xem trạng thái commit hiện tại trong [draft PR #1](https://github.com/Phuongle29-01/odoo-workspace/pull/1).

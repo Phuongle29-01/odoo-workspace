@@ -36,4 +36,4 @@ Schema hiện được tạo idempotent bằng `CREATE TABLE IF NOT EXISTS`; khi
 
 ## Git và PR
 
-Nhánh làm việc: `feature/odoo17-smart-workspace`. Không force-push/reset/clean. Repository remote ban đầu chưa có nhánh main; PR cần một base branch thực sự và quyền GitHub API. Nội dung PR có sẵn trong `docs/pull-request.md`. Không tuyên bố đã mở PR hoặc CI remote thành công khi API chưa cho phép.
+Nhánh làm việc: `feature/odoo17-smart-workspace`. Không force-push/reset/clean. Repository remote ban đầu chưa có nhánh main; đã tạo main bằng commit khảo sát rồi đẩy nhánh tính năng riêng. GitHub API xác nhận repository private và có quyền push; nội dung PR ở `docs/pull-request.md`. Không merge hoặc publish production trong tác vụ này. Kết quả CI remote chỉ ghi khi run thực sự hoàn tất.

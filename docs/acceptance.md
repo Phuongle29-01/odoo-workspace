@@ -17,7 +17,7 @@
 | Polling app ↔ Odoo, conflict, ACL revocation, timeout | DONE (local) | 30s polling + refocus; direct Odoo edit, đồng thời, thu hồi quyền và local pause/recover; chưa realtime bus/offline queue |
 | Responsive/dark/light/Ctrl+K | DONE (local browser) | Chromium desktop/mobile; chưa kiểm tra nhiều trình duyệt/thiết bị vật lý |
 | Docker build và app runtime | Xem validation.md | Kết quả thực tế được ghi sau khi chạy |
-| GitHub Actions | PARTIAL | Workflow đã viết, chưa chạy trên GitHub |
+| GitHub Actions | DONE (run xác định) | Run 39967007750 success ở commit 4a3360e, gồm checkout mới, build và toàn bộ suite. Trạng thái commit mới xem tại PR |
 | Production/multi-machine/SSO | BLOCKED / NOT STARTED | Cần DB, môi trường staging, tài khoản test và hạ tầng HTTPS; SSO chưa cấu hình |
 | Milestone/đầu mục/model x_ của doanh nghiệp | BLOCKED | Cần xác minh metadata và quy ước doanh nghiệp |
 

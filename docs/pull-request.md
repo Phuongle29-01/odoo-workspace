@@ -7,3 +7,5 @@ Sửa task yêu cầu addon bridge để kiểm tra revision nguyên tử, trán
 Validation thực tế và phần chưa nghiệm thu được ghi ở `docs/validation.md` và `docs/acceptance.md`. Không có secret, volume hoặc credential được đưa vào source. Không sửa dữ liệu máy chủ doanh nghiệp; public version của URL người dùng xác nhận Odoo 17 Enterprise, còn thiếu database/staging account để nghiệm thu.
 
 Docker development/production, CI và hướng dẫn Việt ngữ nằm trong README. Workflow CI remote và triển khai HTTPS doanh nghiệp cần được chạy độc lập sau khi repository và hạ tầng sẵn sàng.
+
+Đã kiểm thử: typecheck và production build; 6 unit, 24 integration với Odoo 17/PostgreSQL thật, 3 browser checks. GitHub Actions run 39967007750 đã success trên checkout mới ở commit 4a3360e. Startup development cũng đã qua kiểm tra đăng nhập/tìm kiếm/điều hướng.

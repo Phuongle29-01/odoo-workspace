@@ -16,6 +16,7 @@
 | Quyền image / secret | Runtime UID 1000; image không có `.env*`; source candidates và browser JS không chứa các secret local đã sinh |
 | Health | `/api/health` trả `status=ok`, `database=ok`; readiness còn được xác minh qua nghiệp vụ thật |
 | Dependency advisory | `npm audit --omit=dev --audit-level=high`: 0 vulnerabilities tại thời điểm kiểm tra |
+| GitHub Actions (checkout mới) | [Run 39967007750](https://github.com/Phuongle29-01/odoo-workspace/actions/runs/39967007750) **success**, commit `4a3360e`: typecheck/unit/build/integration/browser đều hoàn tất |
 | Remote Odoo | Public `/xmlrpc/2/common.version` và JSON-RPC version trả `17.0+e-20260908` |
 
 Integration kiểm tra hai UID riêng, login sai, session expiry/logout, CSRF, title/partial/ID/project/unaccented search, tên trùng, task con khác dự án, record rules, đổi toàn bộ field được hỗ trợ, conflict/race, thay đổi trực tiếp từ Odoo, comment/note đúng subtype, file roundtrip/IDOR, subtask/idempotency, thu hồi quyền và loại bookmark, notification/read/deep link, Discuss membership/read/send/search/message deep link, unknown mutation và timeout/recover. Timeout được tạo bằng pause/unpause container **local**; không thực hiện với máy chủ doanh nghiệp.
@@ -31,6 +32,6 @@ Integration kiểm tra hai UID riêng, login sai, session expiry/logout, CSRF, t
 
 ## Chưa xác minh
 
-Chưa đăng nhập hoặc đọc/ghi nghiệp vụ trên `tabvietnam.vuahethong.com`: thiếu tên database, xác nhận production/staging và danh tính test hợp lệ. Chưa chạy CI trên GitHub, triển khai domain HTTPS production, kiểm tra trên hai máy vật lý hoặc phục hồi trong một cloud task mới. Các trạng thái này độc lập với việc local app đã chạy và cấu hình đã lưu.
+Chưa đăng nhập hoặc đọc/ghi nghiệp vụ trên `tabvietnam.vuahethong.com`: thiếu tên database, xác nhận production/staging và danh tính test hợp lệ. CI đã chạy thành công trên checkout mới của GitHub Actions. Chưa triển khai domain HTTPS production, kiểm tra trên hai máy vật lý hoặc phục hồi trong một cloud task mới. Các trạng thái này độc lập với việc local app đã chạy và cấu hình đã lưu.
 
 Giới hạn chức năng, chỉ mục/tải tìm kiếm và checklist staging nằm trong [acceptance.md](acceptance.md); không xem public version response là integration test của doanh nghiệp.
