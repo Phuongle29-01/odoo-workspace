@@ -1,0 +1,41 @@
+name: smart-workspace-production
+services:
+  db:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: workspace
+      POSTGRES_USER: workspace
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD securely}
+    volumes: ['production-db:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U workspace -d workspace']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  app:
+    build: .
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      SESSION_COOKIE_SECURE: 'true'
+      ODOO_ALLOW_HTTP: 'false'
+      ODOO_WRITE_ENABLED: ${ODOO_WRITE_ENABLED:-false}
+    depends_on:
+      db: { condition: service_healthy }
+    restart: unless-stopped
+  proxy:
+    image: caddy:2.10
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN}
+    ports: ['80:80', '443:443']
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [app]
+    restart: unless-stopped
+volumes:
+  production-db:
+  caddy-data:
+  caddy-config:
