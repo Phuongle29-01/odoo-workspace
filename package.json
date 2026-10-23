@@ -1,0 +1,50 @@
+{
+  "name": "odoo-smart-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13 <25"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "node scripts/start.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:integration": "tsx --env-file=.env.local scripts/integration.ts",
+    "test:e2e": "playwright test",
+    "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
+    "local:prepare": "python3 scripts/prepare-local.py",
+    "local:seed": "docker compose --env-file .env.local --profile local exec -T odoo python3 /seed/seed-odoo.py",
+    "check:odoo": "tsx --env-file=.env.local scripts/check-odoo.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.0",
+    "http-proxy-agent": "^9.1.0",
+    "https-proxy-agent": "^9.1.0",
+    "lucide-react": "^0.577.0",
+    "next": "16.4.2",
+    "pg": "^8.16.3",
+    "proxy-from-env": "^2.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sanitize-html": "^2.17.0",
+    "xmlrpc": "^1.3.2",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.5",
+    "@types/proxy-from-env": "^1.0.4",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/sanitize-html": "^2.16.0",
+    "@types/xmlrpc": "^1.3.10",
+    "prettier": "^3.9.10",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  }
+}
