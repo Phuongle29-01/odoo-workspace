@@ -15,14 +15,21 @@ if (
   throw new Error(
     'Review the UI change first. Set UPDATE_VISUALS=1 only for an intentional baseline update.',
   );
+// Webfont bytes and Chromium are pinned; Linux font rasterization still varies by distro.
+const release = existsSync('/etc/os-release') ? readFileSync('/etc/os-release', 'utf8') : '';
+const osValue = (key: string) =>
+  release.match(new RegExp(`^${key}=(.*)$`, 'm'))?.[1].replaceAll('"', '') || 'unknown';
+const visualPlatform =
+  process.platform === 'linux' ? `${osValue('ID')}-${osValue('VERSION_ID')}` : process.platform;
 export default defineConfig({
   testDir: 'tests',
+  metadata: { visualPlatform },
   updateSnapshots: process.env.UPDATE_VISUALS === '1' ? 'all' : 'none',
   fullyParallel: false,
   workers: 1,
   timeout: 30000,
   expect: { toHaveScreenshot: { animations: 'disabled', maxDiffPixels: 50 } },
-  snapshotPathTemplate: '{testDir}/visual/snapshots/{projectName}/{arg}{ext}',
+  snapshotPathTemplate: `{testDir}/visual/snapshots/${visualPlatform}/{projectName}/{arg}{ext}`,
   reporter: [
     ['list'],
     ['html', { open: 'never' }],

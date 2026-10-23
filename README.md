@@ -77,7 +77,7 @@ npm run test:e2e
 
 Cài đúng Chromium đi kèm lockfile bằng `npx playwright install chromium` (Linux thiếu thư viện hệ thống: `npx playwright install --with-deps chromium`). Cloud dùng `PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright`; config tự nhận cache này khi tồn tại. Không thay browser hệ thống trong suite visual.
 
-`npm run test:ui` chạy mock browser + accessibility, `npm run test:visual` so sánh 21 chuẩn ảnh, `npm run test:e2e -- --project=odoo` chỉ chạy browser/Odoo thật. `npm run test:e2e` chạy cả ba nhóm. Mock chỉ chặn request trong Playwright; API lạ trong fixture trả 501. HTML report ở `playwright-report/`, screenshot/diagnostics/trace ở `test-results/`; CI upload artifact trong 14 ngày. Không cập nhật chuẩn ảnh khi lỗi chưa được giải thích.
+`npm run test:ui` chạy mock browser + accessibility, `npm run test:visual` so sánh 21 chuẩn ảnh cho OS đang chạy (Debian 13 hoặc Ubuntu 24.04), `npm run test:e2e -- --project=odoo` chỉ chạy browser/Odoo thật. `npm run test:e2e` chạy cả ba nhóm. Mock chỉ chặn request trong Playwright; API lạ trong fixture trả 501. HTML report ở `playwright-report/`, screenshot/diagnostics/trace ở `test-results/`; CI upload artifact trong 14 ngày. Không cập nhật chuẩn ảnh khi lỗi chưa được giải thích.
 
 Sau khi dừng các suite khác, dùng production `npm start` và `npm run measure:performance` để đo local thực, tạo dữ liệu riêng 0/100/500/1100 task và dọn trong `finally`. Không chạy công cụ này lên production/staging doanh nghiệp; có guard local `workspace_test`.
 

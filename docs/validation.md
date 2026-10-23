@@ -21,6 +21,10 @@ Tổng suite local: **76 passed, 0 failed, 0 skipped**. Trong các vòng phát t
 
 Kết quả hiện tại không xác nhận nghiệp vụ trên máy chủ doanh nghiệp, tải đồng thời nhiều người dùng, Safari/Firefox, thiết bị vật lý, domain HTTPS production hoặc khôi phục snapshot trong cloud task mới. [Ảnh và hướng dẫn A–H](ux-review.md).
 
+## Sai khác renderer trong CI và cách xử lý
+
+CI 39978725935 trên Ubuntu 24.04.5: 22 browser test đạt, 17 visual test lỗi, 0 skipped. Cả 4 test Odoo thật và 14 test UI/accessibility đều đạt. Các ảnh lỗi có kích thước/bố cục giữ nguyên, lệch 55–227 pixel tập trung ở nét chữ so với Debian 13. Đã xem diff và log runner, giữ ảnh Debian, thêm bộ ảnh riêng Ubuntu có provenance; chọn baseline theo OS và pin CI Ubuntu 24.04. Giữ `maxDiffPixels:50` và không cập nhật baseline tự động. Kết quả run sau sửa được ghi trong PR/CI theo commit mới; không coi run lỗi này là pass.
+
 ## Lịch sử xác minh MVP trước bản UX
 
 ### Các kiểm tra trước đây

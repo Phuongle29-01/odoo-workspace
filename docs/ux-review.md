@@ -22,21 +22,22 @@ Các sửa lỗi qua kiểm thử: bỏ bảng desktop bị hiển thị lặp t
 Ảnh là ảnh trình duyệt của ứng dụng đang chạy. Dữ liệu ảnh đến từ fixture **chỉ trong tests**, có hai dự án, tên trùng, task ba cấp, comment, thông báo và Discuss; không phải ảnh dữ liệu doanh nghiệp.
 
 - 21 ảnh trước thay đổi ở `docs/ui-before/`: giao diện development tại commit `63a80af`; có thể có chỉ báo development của Next.js.
-- 21 ảnh sau/chuẩn so sánh ở `tests/visual/snapshots/`: production, Chromium đi kèm Playwright trong lockfile, Inter tự host, `vi-VN`, `Asia/Ho_Chi_Minh`, thời gian fixture cố định, reduced motion.
+- 21 ảnh sau/chuẩn so sánh cho mỗi OS ở `tests/visual/snapshots/debian-13/` và `ubuntu-24.04/`: production, Chromium đi kèm Playwright trong lockfile, Inter tự host, `vi-VN`, `Asia/Ho_Chi_Minh`, thời gian fixture cố định, reduced motion.
 - Kích thước viewport: desktop 1440×900, laptop 1366×768, mobile 390×844. Ảnh full-page có thể cao hơn viewport.
 - Notification fixture sau được sửa để khớp hợp đồng API trả body dạng plain text; markup hiện trong ảnh notification ban đầu không phải lỗi xử lý HTML của adapter production.
+- Baseline được chọn tự động theo ID/version của hệ điều hành; CI cố định Ubuntu 24.04, cloud hiện tại Debian 13. Lượt CI 39978725935 cho thấy 17 ảnh lệch 55–227 pixel ở nét chữ, cùng kích thước/bố cục và 18 test hành vi/UI đều đạt. Đã xem diff, giữ bộ Debian và bổ sung bộ Ubuntu từ ảnh actual của chính run đó; provenance đi kèm từng ảnh. Không tăng ngưỡng 50 pixel, không che vùng ảnh và không tự ghi chuẩn khi test lỗi.
 - `toHaveScreenshot()` so sánh mặc định không được ghi lại baseline; sai khác >50 pixel làm test thất bại. CI không tự cập nhật chuẩn. Chỉ tạo/cập nhật có chủ đích sau khi xem ảnh actual/expected/diff, dùng `UPDATE_VISUALS=1 npm run test:visual -- --update-snapshots` (thêm `--grep notifications` nếu chỉ thay màn hình đó).
 - Mỗi test ảnh đính kèm screenshot vào HTML report; lỗi UI/mock lưu trace và screenshot. Suite dùng tài khoản Odoo thật tắt trace/video để tránh ghi thông tin xác thực. Diagnostics ghi lỗi JavaScript, console và đường dẫn request lỗi, không ghi body/header xác thực.
 
-| Màn hình      | Desktop                                                    | Laptop                                                    | Mobile                                                    |
-| ------------- | ---------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
-| Login         | [Ảnh](../tests/visual/snapshots/desktop/login.png)         | [Ảnh](../tests/visual/snapshots/laptop/login.png)         | [Ảnh](../tests/visual/snapshots/mobile/login.png)         |
-| Dashboard     | [Ảnh](../tests/visual/snapshots/desktop/dashboard.png)     | [Ảnh](../tests/visual/snapshots/laptop/dashboard.png)     | [Ảnh](../tests/visual/snapshots/mobile/dashboard.png)     |
-| Search        | [Ảnh](../tests/visual/snapshots/desktop/search.png)        | [Ảnh](../tests/visual/snapshots/laptop/search.png)        | [Ảnh](../tests/visual/snapshots/mobile/search.png)        |
-| Project       | [Ảnh](../tests/visual/snapshots/desktop/project.png)       | [Ảnh](../tests/visual/snapshots/laptop/project.png)       | [Ảnh](../tests/visual/snapshots/mobile/project.png)       |
-| Task          | [Ảnh](../tests/visual/snapshots/desktop/task.png)          | [Ảnh](../tests/visual/snapshots/laptop/task.png)          | [Ảnh](../tests/visual/snapshots/mobile/task.png)          |
-| Notifications | [Ảnh](../tests/visual/snapshots/desktop/notifications.png) | [Ảnh](../tests/visual/snapshots/laptop/notifications.png) | [Ảnh](../tests/visual/snapshots/mobile/notifications.png) |
-| Discuss       | [Ảnh](../tests/visual/snapshots/desktop/discuss.png)       | [Ảnh](../tests/visual/snapshots/laptop/discuss.png)       | [Ảnh](../tests/visual/snapshots/mobile/discuss.png)       |
+| Màn hình      | Desktop                                                              | Laptop                                                              | Mobile                                                              |
+| ------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Login         | [Ảnh](../tests/visual/snapshots/debian-13/desktop/login.png)         | [Ảnh](../tests/visual/snapshots/debian-13/laptop/login.png)         | [Ảnh](../tests/visual/snapshots/debian-13/mobile/login.png)         |
+| Dashboard     | [Ảnh](../tests/visual/snapshots/debian-13/desktop/dashboard.png)     | [Ảnh](../tests/visual/snapshots/debian-13/laptop/dashboard.png)     | [Ảnh](../tests/visual/snapshots/debian-13/mobile/dashboard.png)     |
+| Search        | [Ảnh](../tests/visual/snapshots/debian-13/desktop/search.png)        | [Ảnh](../tests/visual/snapshots/debian-13/laptop/search.png)        | [Ảnh](../tests/visual/snapshots/debian-13/mobile/search.png)        |
+| Project       | [Ảnh](../tests/visual/snapshots/debian-13/desktop/project.png)       | [Ảnh](../tests/visual/snapshots/debian-13/laptop/project.png)       | [Ảnh](../tests/visual/snapshots/debian-13/mobile/project.png)       |
+| Task          | [Ảnh](../tests/visual/snapshots/debian-13/desktop/task.png)          | [Ảnh](../tests/visual/snapshots/debian-13/laptop/task.png)          | [Ảnh](../tests/visual/snapshots/debian-13/mobile/task.png)          |
+| Notifications | [Ảnh](../tests/visual/snapshots/debian-13/desktop/notifications.png) | [Ảnh](../tests/visual/snapshots/debian-13/laptop/notifications.png) | [Ảnh](../tests/visual/snapshots/debian-13/mobile/notifications.png) |
+| Discuss       | [Ảnh](../tests/visual/snapshots/debian-13/desktop/discuss.png)       | [Ảnh](../tests/visual/snapshots/debian-13/laptop/discuss.png)       | [Ảnh](../tests/visual/snapshots/debian-13/mobile/discuss.png)       |
 
 ## Tự kiểm thử A–H trên local
 
