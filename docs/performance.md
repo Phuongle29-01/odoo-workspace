@@ -1,5 +1,7 @@
 # Số đo hiệu năng thực tế
 
+> Cập nhật UX 2.0 (24/10/2026): xem [báo cáo và trạng thái kiểm thử](ux2-report.md). Các kết quả 76 tests/hiệu năng và giới hạn chưa có preview/index bên dưới là lịch sử bản trước.
+
 Đo lúc `2026-10-23T15:17:56.824Z` bằng production Next standalone, Odoo 17 thật và PostgreSQL 16 cục bộ, Chromium 156, viewport 1440×900. Một người dùng trên cloud chia sẻ tài nguyên; cache trình duyệt đã ấm. Không chạy bộ kiểm thử/build khác trong lúc đo. Đây không phải SLA của máy chủ doanh nghiệp.
 
 ## Thời gian giao diện

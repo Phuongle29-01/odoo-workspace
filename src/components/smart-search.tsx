@@ -2,6 +2,8 @@
 import { Fragment, useEffect, useRef, useState, type RefObject, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { normalizeText } from '@/lib/search';
 import {
   Search,
   X,
@@ -12,7 +14,7 @@ import {
   ArrowUpRight,
   ShieldCheck,
 } from 'lucide-react';
-import { useData, label, dateLabel, type Row } from '@/lib/client';
+import { api, ApiError, useData, label, dateLabel, type Row } from '@/lib/client';
 import { highlightRanges } from '@/lib/search';
 import { Badge, Empty, ErrorBox, Loading } from './ui';
 type Result = { items: Row[]; nextCursor: number | null; scanLimited: boolean; scanned?: number };
@@ -96,7 +98,7 @@ export function SmartSearch({ inputRef }: { inputRef: RefObject<HTMLInputElement
   const show = open && !!term.trim();
   function go(id?: number) {
     setOpen(false);
-    router.push(id ? `/tasks/${id}` : `/search?q=${encodeURIComponent(term)}`);
+    router.push(id ? `/tasks/${id}?focus=1` : `/search?q=${encodeURIComponent(term)}`);
   }
   function keyboard(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Escape') {
@@ -167,7 +169,7 @@ export function SmartSearch({ inputRef }: { inputRef: RefObject<HTMLInputElement
                     id={`quick-result-${index}`}
                     aria-selected={active === index}
                     tabIndex={-1}
-                    href={`/tasks/${task.id}`}
+                    href={`/tasks/${task.id}?focus=1`}
                     onMouseEnter={() => setActive(index)}
                     onClick={() => setOpen(false)}
                   >
@@ -291,10 +293,11 @@ export default function SearchPage({ initial }: { initial: string }) {
     url = useSearchParams(),
     ref = useRef<HTMLInputElement>(null);
   const [term, setTerm] = useState(initial),
-    [query, setQuery] = useState(initial),
-    [cursor, setCursor] = useState(0),
     [active, setActive] = useState(-1);
-  const filterKey = [
+  const query = (url.get('q') || '').trim();
+  const p = new URLSearchParams();
+  for (const key of [
+    'q',
     'project',
     'stage',
     'state',
@@ -303,44 +306,140 @@ export default function SearchPage({ initial }: { initial: string }) {
     'overdue',
     'open',
     'description',
-  ]
-    .map((k) => url.get(k) || '')
-    .join('|');
+  ]) {
+    const value = url.get(key);
+    if (value) p.set(key, key === 'q' ? value.trim() : value);
+  }
+  p.sort();
+  const canonical = p.toString(),
+    generation = useRef(canonical);
+  generation.current = canonical;
+  const enabled =
+    !!query ||
+    ['project', 'stage', 'assignee', 'mine', 'overdue', 'open', 'state'].some(
+      (key) => !!p.get(key),
+    );
+  const requestedPages = Math.max(1, Math.min(20, Number(url.get('pages')) || 1));
+  useEffect(() => setTerm(url.get('q') || ''), [query]);
   useEffect(() => {
     const timer = setTimeout(() => {
-      setQuery(term.trim());
-      setCursor(0);
-      setActive(-1);
-      const p = new URLSearchParams(window.location.search);
-      p.set('q', term);
-      router.replace(`/search?${p}`, { scroll: false });
+      const next = new URLSearchParams(window.location.search);
+      if ((next.get('q') || '').trim() === term.trim()) return;
+      term.trim() ? next.set('q', term.trim()) : next.delete('q');
+      next.delete('pages');
+      next.delete('selected');
+      window.history.replaceState(null, '', `/search?${next}`);
     }, 300);
     return () => clearTimeout(timer);
   }, [term, router]);
+  useEffect(() => setActive(-1), [canonical]);
+  const data = useInfiniteQuery<Result, ApiError>({
+    queryKey: ['task-search', canonical],
+    initialPageParam: 0,
+    queryFn: ({ pageParam, signal }) =>
+      api<Result>(`tasks?${canonical}&cursor=${pageParam}`, { signal }),
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    enabled,
+    retry: false,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
+  const options = useData<Options>('task-options', true, false);
+  const rows = [
+    ...new Map(
+      (data.data?.pages || []).flatMap((page) => page.items).map((task) => [task.id, task]),
+    ).values(),
+  ];
   useEffect(() => {
-    setCursor(0);
-    setActive(-1);
-  }, [filterKey]);
+    if (
+      enabled &&
+      data.data &&
+      data.data.pages.length < requestedPages &&
+      data.hasNextPage &&
+      !data.isFetching &&
+      !data.error
+    )
+      void data.fetchNextPage();
+  }, [
+    enabled,
+    requestedPages,
+    data.data,
+    data.hasNextPage,
+    data.isFetching,
+    data.error,
+    data.fetchNextPage,
+  ]);
   useEffect(() => {
-    const pop = () => setTerm(new URLSearchParams(window.location.search).get('q') || '');
-    window.addEventListener('popstate', pop);
-    return () => window.removeEventListener('popstate', pop);
-  }, []);
-  useEffect(() => {
-    const q = url.get('q') || '';
-    if (document.activeElement !== ref.current && q !== query) setTerm(q);
-  }, [url, query]);
-  const p = new URLSearchParams(url.toString());
-  p.set('q', query);
-  p.set('cursor', String(cursor));
-  const data = useData<Result>(`tasks?${p}`, !!query, false);
-  function filter(name: string, value: string) {
-    const next = new URLSearchParams(url.toString());
+    const id = Number(url.get('selected'));
+    if (!id || active >= 0) return;
+    const index = rows.findIndex((row) => row.id === id);
+    if (index >= 0) {
+      setActive(index);
+      document.getElementById(`search-result-${index}`)?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [url, rows, active]);
+  function filter(name: string, value: string, clearQuery = false) {
+    const next = new URLSearchParams(window.location.search);
     value ? next.set(name, value) : next.delete(name);
-    setCursor(0);
-    router.replace(`/search?${next}`, { scroll: false });
+    next.delete('pages');
+    next.delete('selected');
+    if (clearQuery) {
+      next.delete('q');
+      setTerm('');
+    }
+    window.history.replaceState(null, '', `/search?${next}`);
   }
-  const rows = data.data?.items || [];
+  function openTask(id: number) {
+    const next = new URL(window.location.href);
+    next.searchParams.set('selected', String(id));
+    window.history.replaceState(window.history.state, '', next);
+    router.push(`/tasks/${id}?focus=1`);
+  }
+  async function more() {
+    const key = canonical;
+    const next = await data.fetchNextPage();
+    if (generation.current !== key || next.isError) return;
+    const current = new URLSearchParams(window.location.search);
+    for (const name of [...current.keys()])
+      if (
+        ![
+          'q',
+          'project',
+          'stage',
+          'state',
+          'assignee',
+          'mine',
+          'overdue',
+          'open',
+          'description',
+        ].includes(name)
+      )
+        current.delete(name);
+    if (current.has('q')) current.set('q', current.get('q')!.trim());
+    current.sort();
+    if (current.toString() !== key) return;
+    const params = new URLSearchParams(window.location.search);
+    params.set('pages', String(next.data?.pages.length || 1));
+    window.history.replaceState(null, '', `/search?${params}`);
+  }
+  const incomplete = !!data.hasNextPage,
+    last = data.data?.pages.at(-1),
+    loading =
+      data.isFetchingNextPage ||
+      !!(data.data && data.data.pages.length < requestedPages && incomplete);
+  const suggestions =
+    query.length >= 2
+      ? [
+          ...(options.data?.projects || [])
+            .filter((row) => normalizeText(row.name || '').includes(normalizeText(query)))
+            .slice(0, 3)
+            .map((row) => ({ kind: 'project', label: 'Dự án', row })),
+          ...(options.data?.users || [])
+            .filter((row) => normalizeText(row.name || '').includes(normalizeText(query)))
+            .slice(0, 2)
+            .map((row) => ({ kind: 'assignee', label: 'Người phụ trách', row })),
+        ]
+      : [];
   return (
     <>
       <div className="page-heading">
@@ -354,19 +453,21 @@ export default function SearchPage({ initial }: { initial: string }) {
         <Search size={23} />
         <input
           ref={ref}
-          autoFocus
           role="combobox"
           aria-label="Từ khóa tìm nhiệm vụ"
           aria-autocomplete="list"
           aria-expanded={rows.length > 0}
           aria-controls={rows.length ? 'search-results' : undefined}
-          aria-activedescendant={active >= 0 ? `search-result-${active}` : undefined}
+          aria-activedescendant={
+            active >= 0 && active < rows.length ? `search-result-${active}` : undefined
+          }
+          aria-busy={data.isFetching}
           autoComplete="off"
           value={term}
           maxLength={160}
           onChange={(e) => setTerm(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (['ArrowDown', 'ArrowUp'].includes(e.key)) {
               e.preventDefault();
               setActive((n) =>
                 rows.length
@@ -376,7 +477,7 @@ export default function SearchPage({ initial }: { initial: string }) {
             }
             if (e.key === 'Enter' && rows.length && term.trim() === query) {
               e.preventDefault();
-              router.push(`/tasks/${rows[active >= 0 ? active : 0].id}`);
+              openTask(rows[active >= 0 ? active : 0].id);
             }
             if (e.key === 'Escape') {
               setActive(-1);
@@ -391,6 +492,20 @@ export default function SearchPage({ initial }: { initial: string }) {
           </button>
         )}
       </div>
+      {suggestions.length > 0 && (
+        <div className="filter-suggestions" aria-label="Gợi ý bộ lọc">
+          <span>Thử lọc theo:</span>
+          {suggestions.map(({ kind, label: kindLabel, row }) => (
+            <button
+              className="button small"
+              key={`${kind}:${row.id}`}
+              onClick={() => filter(kind, String(row.id), true)}
+            >
+              {kindLabel}: {row.name}
+            </button>
+          ))}
+        </div>
+      )}
       <TaskFilters params={p} onChange={filter} />
       <div className="search-options">
         <label>
@@ -406,21 +521,22 @@ export default function SearchPage({ initial }: { initial: string }) {
           Quyền được kiểm tra tại Odoo mỗi lần tìm
         </span>
       </div>
-      {!query ? (
+      {!enabled ? (
         <Empty
           title="Bạn đang tìm công việc nào?"
-          description="Thử “kiểm tra hồ sơ”, “kiem tra ho so” hoặc ID nhiệm vụ."
+          description="Thử “kiểm tra hồ sơ”, “kiem tra ho so”, ID hoặc chọn bộ lọc."
         />
       ) : data.isPending ? (
         <Loading />
-      ) : data.error ? (
+      ) : data.error && !data.data ? (
         <ErrorBox error={data.error} retry={() => data.refetch()} />
       ) : (
         <>
           <div className="section-toolbar">
-            <strong aria-live="polite">{rows.length} kết quả trong lượt tìm này</strong>
+            <strong aria-live="polite">{rows.length} kết quả đã tải</strong>
             <span className="muted small-text">↑ ↓ chọn · Enter mở nhiệm vụ</span>
           </div>
+          {data.error && <ErrorBox error={data.error} retry={() => data.refetch()} />}
           {rows.length ? (
             <ul
               className="search-result-list"
@@ -434,8 +550,14 @@ export default function SearchPage({ initial }: { initial: string }) {
                     role="option"
                     id={`search-result-${index}`}
                     aria-selected={active === index}
-                    href={`/tasks/${task.id}`}
+                    href={`/tasks/${task.id}?focus=1`}
                     onMouseEnter={() => setActive(index)}
+                    onClick={(e) => {
+                      if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
+                        e.preventDefault();
+                        openTask(task.id);
+                      }
+                    }}
                   >
                     <div className="result-title">
                       <strong>
@@ -453,30 +575,31 @@ export default function SearchPage({ initial }: { initial: string }) {
             </ul>
           ) : (
             <Empty
-              title="Chưa có nhiệm vụ phù hợp"
-              description="Thử từ khóa ngắn hơn, bỏ bớt bộ lọc hoặc tìm tiếp nếu còn dữ liệu."
+              title={incomplete ? 'Chưa thấy trong phần đã tìm' : 'Chưa có nhiệm vụ phù hợp'}
+              description={
+                incomplete
+                  ? 'Còn dữ liệu chưa được quét. Tìm tiếp hoặc chọn dự án/người phụ trách để thu hẹp phạm vi.'
+                  : 'Đã tìm hết trong phạm vi bộ lọc hiện tại. Thử từ khóa ngắn hơn hoặc thay đổi bộ lọc.'
+              }
             />
           )}
-          {data.data?.scanLimited && (
-            <p className="helper">
-              Còn nhiệm vụ chưa quét. Bấm Tìm tiếp để kiểm tra phần dữ liệu tiếp theo.
-            </p>
-          )}
-          <div className="pagination">
-            {cursor > 0 && (
-              <button className="button" onClick={() => setCursor(0)}>
-                Về đầu
-              </button>
-            )}
-            {data.data?.nextCursor != null && (
+          <div className="search-continuation" role="status">
+            <span>
+              {loading
+                ? 'Đang tải tiếp và giữ các kết quả đã có…'
+                : incomplete
+                  ? last?.scanLimited
+                    ? 'Chưa quét hết phạm vi tìm kiếm. Có thể còn nhiệm vụ phù hợp.'
+                    : 'Còn kết quả phù hợp chưa được tải.'
+                  : 'Đã tìm hết trong phạm vi bộ lọc hiện tại.'}
+            </span>
+            {incomplete && (
               <button
                 className="button primary"
-                onClick={() => {
-                  setCursor(data.data!.nextCursor!);
-                  setActive(-1);
-                }}
+                disabled={data.isFetching}
+                onClick={() => void more()}
               >
-                Tìm tiếp
+                {data.isFetching ? 'Đang tìm…' : 'Tìm tiếp'}
               </button>
             )}
           </div>

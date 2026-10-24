@@ -9,7 +9,7 @@ import {
   type CSSProperties,
 } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   PanelLeftClose,
   PanelLeftOpen,
@@ -23,10 +23,87 @@ import {
 } from 'lucide-react';
 import { useMediaQuery } from '@/lib/hooks';
 import { useUiPreferences } from '@/lib/preferences';
-import { useData, label, rid, dateLabel, type Row } from '@/lib/client';
+import { api, useData, label, rid, dateLabel, type Row } from '@/lib/client';
 import { useNotice } from './context';
 import { Empty, ErrorBox, Loading } from './ui';
 import type { TaskDetail } from './task-detail';
+
+function TaskChildNodes({ detail }: { detail: TaskDetail }) {
+  const [open, setOpen] = useState(true),
+    [rows, setRows] = useState(detail.children),
+    [visible, setVisible] = useState(12),
+    [more, setMore] = useState(detail.children.length === 100),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState<Error | null>(null);
+  const stamp = detail.children.map((row) => row.id).join(',');
+  useEffect(() => {
+    setRows(detail.children);
+    setVisible(12);
+    setMore(detail.children.length === 100);
+    setError(null);
+  }, [detail.task.id, stamp]);
+  async function load() {
+    if (visible < rows.length) {
+      setVisible((n) => n + 12);
+      return;
+    }
+    if (!more) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const result = await api<{ items: Row[]; nextCursor: number | null }>(
+        `tasks/${detail.task.id}/children?before=${Math.min(...rows.map((r) => r.id))}`,
+      );
+      setRows((old) => [...new Map([...old, ...result.items].map((r) => [r.id, r])).values()]);
+      setVisible((n) => n + 20);
+      setMore(result.nextCursor !== null);
+    } catch (e) {
+      setError(e as Error);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <>
+      <li className="tree-branch-control">
+        <button aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+          {open ? 'Thu gọn' : 'Mở'} nhiệm vụ con · {rows.length}
+          {more ? '+' : ''}
+        </button>
+      </li>
+      {open && (
+        <>
+          {rows.slice(0, visible).map((c) => (
+            <li key={c.id} className="child-node">
+              <Link href={`/tasks/${c.id}`}>
+                <ChevronRight size={14} />
+                <span>
+                  {c.name}
+                  <small>
+                    {label(c.project_id)}
+                    {label(c.stage_id) ? ` · ${label(c.stage_id)}` : ''}
+                  </small>
+                </span>
+              </Link>
+            </li>
+          ))}
+          {(visible < rows.length || more) && (
+            <li>
+              <button className="button small" disabled={busy} onClick={() => void load()}>
+                {busy ? 'Đang tải…' : 'Tải thêm nhiệm vụ con'}
+              </button>
+            </li>
+          )}
+          {error && (
+            <li>
+              <ErrorBox error={error} retry={() => void load()} />
+            </li>
+          )}
+        </>
+      )}
+    </>
+  );
+}
 
 export function TaskNavigation({ detail }: { detail: TaskDetail }) {
   const { task, ancestors, children, siblings } = detail;
@@ -61,17 +138,7 @@ export function TaskNavigation({ detail }: { detail: TaskDetail }) {
             <strong>{task.name}</strong>
             <small>Đang mở · #{task.id}</small>
           </li>
-          {children.map((c) => (
-            <li key={c.id} className="child-node">
-              <Link href={`/tasks/${c.id}`}>
-                <ChevronRight size={14} />
-                <span>
-                  {c.name}
-                  <small>{label(c.project_id)}</small>
-                </span>
-              </Link>
-            </li>
-          ))}
+          <TaskChildNodes key={task.id} detail={detail} />
         </ul>
         {!children.length && <p className="helper">Chưa có nhiệm vụ con.</p>}
         {siblings.length > 0 && (
@@ -180,11 +247,14 @@ export default function TaskWorkbench({
   collaboration: (view: string) => ReactNode;
   children: (collaborationVisible: boolean) => ReactNode;
 }) {
+  const params = useSearchParams();
   const router = useRouter(),
     notify = useNotice(),
     prefs = useUiPreferences(),
     wide = useMediaQuery('(min-width: 1440px)'),
     laptop = useMediaQuery('(min-width: 1100px)');
+  const focus =
+    params.get('focus') === '1' || (params.get('focus') !== '0' && prefs.value.focusMode === true);
   const [navWidth, setNavWidth] = useState(180),
     [collabWidth, setCollabWidth] = useState(320),
     [view, setView] = useState(activeTab === 'activity' ? 'activity' : 'discussion');
@@ -273,18 +343,36 @@ export default function TaskWorkbench({
       </div>
     );
   }
-  const showNav = wide && navOpen,
+  function setFocus(value: boolean) {
+    const p = new URLSearchParams(window.location.search);
+    p.set('focus', value ? '1' : '0');
+    router.replace(`/tasks/${detail.task.id}?${p}`, { scroll: false });
+    persist(value ? { focusMode: true } : { focusMode: false, navOpen: true, collabOpen: true });
+  }
+  const showNav = wide && navOpen && !focus,
     showCollab = laptop && collabOpen;
   return (
     <section className="workbench" aria-label="Không gian nhiệm vụ">
+      <div className="focus-toolbar">
+        <button className="button small" aria-pressed={focus} onClick={() => setFocus(!focus)}>
+          {focus ? 'Toàn bộ bối cảnh' : 'Tập trung xử lý'}
+        </button>
+        <span>
+          {focus
+            ? 'Ưu tiên nội dung đang xử lý; breadcrumb và trao đổi vẫn được giữ.'
+            : 'Cây nhiệm vụ, chi tiết và trao đổi trong cùng ngữ cảnh.'}
+        </span>
+      </div>
       <div className="workbench-toolbar">
         <button
           className="button small"
-          aria-expanded={wide ? navOpen : activeTab === 'navigation'}
+          aria-expanded={wide ? showNav : activeTab === 'navigation'}
           aria-controls={showNav ? 'task-navigation-panel' : undefined}
           onClick={() =>
             wide
-              ? persist({ navOpen: !navOpen })
+              ? focus
+                ? setFocus(false)
+                : persist({ navOpen: !navOpen })
               : navigate(activeTab === 'navigation' ? 'overview' : 'navigation')
           }
         >

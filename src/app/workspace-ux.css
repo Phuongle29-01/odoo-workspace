@@ -1695,3 +1695,142 @@ textarea:focus-visible,
 select:focus-visible {
   outline-color: var(--focus);
 }
+
+/* UX 2.0: context controls and safe in-task document reader. */
+.focus-toolbar,
+.filter-suggestions,
+.search-continuation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block: 12px;
+}
+.focus-toolbar > span,
+.search-continuation > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.tree-branch-control button {
+  width: 100%;
+  padding: 10px 4px;
+  text-align: left;
+  color: var(--muted);
+  font-size: 11px;
+}
+.notification-filters {
+  flex-wrap: wrap;
+}
+.notification-filters label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.notification-filters input[type='date'] {
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+}
+.file-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.file-row strong {
+  overflow-wrap: anywhere;
+}
+.document-dialog {
+  width: min(960px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+}
+.document-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.document-dialog::backdrop {
+  background: rgb(17 24 39 / 65%);
+}
+.document-dialog header,
+.document-dialog footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  flex-shrink: 0;
+}
+.document-dialog header {
+  border-bottom: 1px solid var(--line);
+}
+.document-dialog h2 {
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.document-dialog p,
+.document-dialog footer > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.document-dialog footer {
+  border-top: 1px solid var(--line);
+}
+.document-dialog header > div {
+  min-width: 0;
+}
+.document-preview-body {
+  overflow: auto;
+  padding: 16px;
+  min-height: 160px;
+}
+.document-preview-body > img {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+  height: auto;
+}
+.pdf-canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 12px auto;
+}
+.pdf-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .document-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+  .document-dialog header,
+  .document-dialog footer {
+    padding: 12px;
+  }
+  .document-dialog footer {
+    flex-wrap: wrap;
+  }
+  .file-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .notification-filters label,
+  .notification-filters select {
+    max-width: 100%;
+  }
+  .focus-toolbar > span {
+    display: none;
+  }
+}

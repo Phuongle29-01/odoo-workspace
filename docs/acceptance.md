@@ -1,5 +1,7 @@
 # Trạng thái nghiệm thu
 
+> Cập nhật UX 2.0 (24/10/2026): xem [báo cáo và trạng thái kiểm thử](ux2-report.md). Các kết quả 76 tests/hiệu năng và giới hạn chưa có preview/index bên dưới là lịch sử bản trước.
+
 `DONE` nghĩa là đã chạy kiểm thử phạm vi được ghi rõ. **Local Odoo thật không phải xác nhận instance doanh nghiệp.** Không có mock runtime hoặc dữ liệu demo dùng thay lỗi Odoo.
 
 | Hạng mục                                                 | Trạng thái                         | Phạm vi                                                                                                                                                                          |

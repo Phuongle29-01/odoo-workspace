@@ -86,3 +86,18 @@ export const dateLabel = (value: unknown) =>
         ),
       )
     : 'Chưa đặt hạn';
+
+/** Odoo datetimes are UTC; display in the employee browser timezone, including time. */
+export const dateTimeLabel = (value: unknown) => {
+  if (typeof value !== 'string' || !value) return 'Chưa có thời gian';
+  const date = new Date(value.includes('T') ? value : value.replace(' ', 'T') + 'Z');
+  return Number.isFinite(date.getTime())
+    ? new Intl.DateTimeFormat('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(date)
+    : 'Chưa có thời gian';
+};

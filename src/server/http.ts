@@ -3,31 +3,39 @@ import { ZodError } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { config } from './config';
 import { AppError } from './errors';
+import { withRpcMetrics, rpcTiming } from './rpc-metrics';
 export async function endpoint(run: () => Promise<unknown>) {
-  const requestId = randomUUID();
-  try {
-    return NextResponse.json(await run(), {
-      headers: { 'Cache-Control': 'no-store', 'X-Request-ID': requestId },
-    });
-  } catch (e) {
-    const err =
-      e instanceof AppError
-        ? e
-        : e instanceof ZodError
-          ? new AppError(400, 'INVALID_INPUT', 'Thông tin gửi lên không hợp lệ.')
-          : new AppError(
-              503,
-              'SERVICE_UNAVAILABLE',
-              'Dịch vụ tạm thời không sẵn sàng. Vui lòng thử lại.',
-            );
-    // Never log RPC arguments, credentials, database URLs or upstream tracebacks.
-    console.error(JSON.stringify({ requestId, code: err.code, status: err.status }));
-    return NextResponse.json(
-      { error: { code: err.code, message: err.message, requestId } },
-      { status: err.status, headers: { 'Cache-Control': 'no-store', 'X-Request-ID': requestId } },
-    );
-  }
+  return withRpcMetrics(async () => {
+    const requestId = randomUUID();
+    try {
+      return NextResponse.json(await run(), {
+        headers: {
+          'Cache-Control': 'no-store',
+          'X-Request-ID': requestId,
+          'Server-Timing': rpcTiming() || '',
+        },
+      });
+    } catch (e) {
+      const err =
+        e instanceof AppError
+          ? e
+          : e instanceof ZodError
+            ? new AppError(400, 'INVALID_INPUT', 'Thông tin gửi lên không hợp lệ.')
+            : new AppError(
+                503,
+                'SERVICE_UNAVAILABLE',
+                'Dịch vụ tạm thời không sẵn sàng. Vui lòng thử lại.',
+              );
+      // Never log RPC arguments, credentials, database URLs or upstream tracebacks.
+      console.error(JSON.stringify({ requestId, code: err.code, status: err.status }));
+      return NextResponse.json(
+        { error: { code: err.code, message: err.message, requestId } },
+        { status: err.status, headers: { 'Cache-Control': 'no-store', 'X-Request-ID': requestId } },
+      );
+    }
+  });
 }
+
 export function csrf(request: Request) {
   if (
     request.headers.get('origin') !== config().origin ||

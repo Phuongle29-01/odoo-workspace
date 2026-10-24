@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   output: 'standalone',
+  outputFileTracingIncludes: {
+    '/pdf-worker': ['./node_modules/pdfjs-dist/build/pdf.worker.min.mjs'],
+  },
   serverExternalPackages: ['pg', 'xmlrpc', 'sanitize-html'],
   async headers() {
     return [

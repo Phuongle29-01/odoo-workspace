@@ -4,7 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { MessageSquare, Users, ExternalLink, Send, Search, LoaderCircle } from 'lucide-react';
-import { api, write, useData, label, dateLabel, type Row } from '@/lib/client';
+import { api, write, useData, label, dateTimeLabel, type Row } from '@/lib/client';
 
 type ChannelPage = { channel: Row; items: Row[]; nextCursor: number | null; focused?: Row | null };
 export default function Discuss({
@@ -24,36 +24,49 @@ export default function Discuss({
   const focused = params.get('message') || '';
   const channels = useData<{ available: boolean; reason?: string; items: Row[] }>('discuss');
   const [text, setText] = useState(''),
-    [term, setTerm] = useState(''),
-    [query, setQuery] = useState(''),
+    [term, setTerm] = useState(params.get('q') || ''),
+    [query, setQuery] = useState(params.get('q') || ''),
     [pending, setPending] = useState(false);
   const draftKey = `workspace-draft:channel:${identity}:${id}`;
   useEffect(() => {
     setText(sessionStorage.getItem(draftKey) || '');
   }, [draftKey]);
   useEffect(() => {
-    const timer = setTimeout(() => setQuery(term), 350);
+    const timer = setTimeout(() => {
+      setQuery(term);
+      const next = new URLSearchParams(window.location.search);
+      if ((next.get('q') || '') === term) return;
+      term ? next.set('q', term) : next.delete('q');
+      window.history.replaceState(null, '', `${window.location.pathname}?${next}`);
+    }, 350);
     return () => clearTimeout(timer);
   }, [term]);
+  useEffect(() => {
+    setTerm(params.get('q') || '');
+    setQuery(params.get('q') || '');
+  }, [id, params.get('q')]);
   const history = useInfiniteQuery({
     queryKey: ['discuss-messages', id, query, focused],
     initialPageParam: 0,
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam, signal }) =>
       api<ChannelPage>(
         `discuss/${id}?cursor=${pageParam}&q=${encodeURIComponent(query)}${focused ? `&message=${encodeURIComponent(focused)}` : ''}`,
+        { signal },
       ),
     getNextPageParam: (page) => page.nextCursor ?? undefined,
     enabled: !!id,
     retry: false,
     refetchInterval: 30000,
   });
-  const messages =
-    history.data?.pages
-      .flatMap((p) => p.items)
-      .slice()
-      .reverse() || [];
+  const messages = [
+    ...new Map((history.data?.pages || []).flatMap((p) => p.items).map((m) => [m.id, m])).values(),
+  ].sort((a, b) => a.id - b.id);
   const focus = history.data?.pages[0].focused;
   const current = history.data?.pages[0].channel;
+  useEffect(() => {
+    if (focused && history.data)
+      document.getElementById(`discuss-message-${focused}`)?.scrollIntoView({ block: 'nearest' });
+  }, [focused, history.data]);
   return (
     <>
       <div className="page-heading">
@@ -135,7 +148,7 @@ export default function Discuss({
                     maxLength={160}
                   />
                 </label>
-                {history.error ? (
+                {history.error && !history.data ? (
                   <div className="error-box">{history.error.message}</div>
                 ) : history.isPending ? (
                   <div className="empty">
@@ -150,7 +163,7 @@ export default function Discuss({
                         disabled={history.isFetchingNextPage}
                         onClick={() => history.fetchNextPage()}
                       >
-                        Tải tin nhắn cũ hơn
+                        {history.isFetchingNextPage ? 'Đang tải lịch sử…' : 'Tải tin nhắn cũ hơn'}
                       </button>
                     )}
                     {focus && !messages.some((m) => m.id === focus.id) && (
@@ -166,6 +179,14 @@ export default function Discuss({
                     ) : (
                       <div className="empty">Chưa có tin nhắn phù hợp.</div>
                     )}
+                  </div>
+                )}
+                {history.error && history.data && (
+                  <div className="error-box" role="alert">
+                    {history.error.message}{' '}
+                    <button className="button small" onClick={() => void history.refetch()}>
+                      Thử lại
+                    </button>
                   </div>
                 )}
                 {writesEnabled && current && (
@@ -230,7 +251,7 @@ function ChatMessage({ row, highlighted = false }: { row: Row; highlighted?: boo
       <div>
         <div className="message-header">
           <strong>{label(row.author_id) || 'Odoo'}</strong>
-          <time>{dateLabel(row.date)}</time>
+          <time>{dateTimeLabel(row.date)}</time>
           <small>#{row.id}</small>
         </div>
         <div className="rich-text" dangerouslySetInnerHTML={{ __html: String(row.body || '') }} />

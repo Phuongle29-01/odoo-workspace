@@ -143,6 +143,8 @@ export const views = [
     ready: 'Tìm đúng việc. Thấy đầy đủ ngữ cảnh.',
   },
   { name: 'project', url: '/projects/12', ready: 'Nhà máy B' },
+  { name: 'projects', url: '/projects', ready: 'Cùng đội ngũ tiến về phía trước' },
+  { name: 'tasks', url: '/tasks', ready: 'Tất cả nhiệm vụ' },
   { name: 'task', url: '/tasks/102', ready: 'Kiểm tra hồ sơ thiết kế' },
   { name: 'notifications', url: '/notifications', ready: 'Thông báo của bạn' },
   { name: 'discuss', url: '/discuss/41', ready: 'Odoo Discuss' },
@@ -271,6 +273,17 @@ export async function mockWorkspace(page: Page, user: 'A' | 'B' = 'A') {
         }
         return ok(state.messages);
       }
+      if (child === 'children') {
+        const rows = state.tasks
+          .filter(
+            (t) =>
+              Array.isArray(t.parent_id) &&
+              t.parent_id[0] === task.id &&
+              (!url.searchParams.get('before') || t.id < Number(url.searchParams.get('before'))),
+          )
+          .sort((a, b) => b.id - a.id);
+        return ok({ items: rows.slice(0, 20), nextCursor: rows.length > 20 ? rows[19].id : null });
+      }
       if (child === 'activities')
         return ok([
           {
@@ -303,9 +316,10 @@ export async function mockWorkspace(page: Page, user: 'A' | 'B' = 'A') {
         task,
         ancestors,
         parentUnavailable: false,
-        children: state.tasks.filter(
-          (t) => Array.isArray(t.parent_id) && t.parent_id[0] === task.id,
-        ),
+        children: state.tasks
+          .filter((t) => Array.isArray(t.parent_id) && t.parent_id[0] === task.id)
+          .sort((a, b) => b.id - a.id)
+          .slice(0, 100),
         siblings: [],
         stages,
         users,

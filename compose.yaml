@@ -41,7 +41,7 @@ services:
         '-d',
         'workspace_test',
         '-i',
-        'project,smart_workspace_bridge',
+        'project,smart_workspace_bridge,smart_workspace_search',
         '--addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons',
         '--without-demo=all',
         '--db-filter=^workspace_test$$',

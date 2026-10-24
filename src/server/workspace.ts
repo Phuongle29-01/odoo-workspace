@@ -176,6 +176,34 @@ export async function taskList(odoo: Odoo, params: URLSearchParams, uid: number)
       scanLimited: false,
     };
   }
+  // Optional Odoo addon: indexed normalized names, with every search still under this UID's ORM rules.
+  if (metadata.workspace_search_name && params.get('description') !== 'true') {
+    const projectMeta = await odoo.fields('project.project');
+    if (projectMeta.workspace_search_name) {
+      const needle = normalize(query).replace(/[\\%_]/g, '\\$&');
+      const projects = await odoo.search(
+        'project.project',
+        [['workspace_search_name', 'ilike', needle]],
+        ['id'],
+        1001,
+      );
+      // Keep the bounded live scan if the project-name expansion would be incomplete.
+      if (projects.length <= 1000) {
+        const alternatives: unknown[] = [['workspace_search_name', 'ilike', needle]];
+        if (projects.length) alternatives.push(['project_id', 'in', projects.map((p) => p.id)]);
+        if (/^\d+$/.test(query) && Number.isSafeInteger(Number(query)))
+          alternatives.push(['id', '=', Number(query)]);
+        const combined = [...domain, ...Array(alternatives.length - 1).fill('|'), ...alternatives];
+        const rows = await odoo.search('project.task', combined, fields, 41, cursor, 'id asc');
+        return {
+          items: await decorateTasks(odoo, rows.slice(0, 40), metadata),
+          nextCursor: rows.length > 40 ? cursor + 40 : null,
+          mode: 'indexed-orm',
+          scanLimited: false,
+        };
+      }
+    }
+  }
   // Per-user live ORM scan: accent-independent matching without a shared permission cache.
   // A bounded scan returns an explicit continuation, never a false complete result set.
   const descriptions = params.get('description') === 'true';
@@ -398,71 +426,105 @@ export async function attachment(odoo: Odoo, taskId: number, id: number) {
     throw denied();
   return row;
 }
-export async function notifications(odoo: Odoo, uid: number) {
+export async function notifications(odoo: Odoo, uid: number, params = new URLSearchParams()) {
   const user = await odoo.read('res.users', uid, ['partner_id']);
   try {
-    const rows = await odoo.search(
+    const domain: unknown[] = [['res_partner_id', '=', relationId(user.partner_id)]];
+    if (params.get('before'))
+      domain.push(['id', '<', z.coerce.number().int().positive().parse(params.get('before'))]);
+    if (['read', 'unread'].includes(params.get('read') || ''))
+      domain.push(['is_read', '=', params.get('read') === 'read']);
+    if (params.get('kind') === 'task') domain.push(['mail_message_id.model', '=', 'project.task']);
+    if (params.get('kind') === 'channel')
+      domain.push(['mail_message_id.model', '=', 'discuss.channel']);
+    if (params.get('after'))
+      domain.push([
+        'mail_message_id.date',
+        '>=',
+        new Date(z.iso.datetime({ offset: true }).parse(params.get('after')))
+          .toISOString()
+          .slice(0, 19)
+          .replace('T', ' '),
+      ]);
+    const raw = await odoo.search(
       'mail.notification',
-      [['res_partner_id', '=', relationId(user.partner_id)]],
+      domain,
       ['mail_message_id', 'is_read', 'notification_type'],
-      80,
+      81,
+      0,
+      'id desc',
     );
-    const items = [];
-    for (const row of rows) {
-      const messageId = relationId(row.mail_message_id);
-      if (!messageId) continue;
+    const page = raw.slice(0, 80);
+    const readVisible = async (
+      model: string,
+      ids: number[],
+      fields: string[],
+      extra: unknown[] = [],
+    ) => {
+      if (!ids.length) return [];
       try {
-        const message = await odoo.read('mail.message', messageId, [
-          'body',
-          'model',
-          'res_id',
-          'author_id',
-          'date',
-          'subtype_id',
-        ]);
-        if (message.model === 'discuss.channel') {
-          const channel = await odoo.read('discuss.channel', Number(message.res_id), [
-            'name',
-            'is_member',
-          ]);
-          if (!channel.is_member) continue;
-          items.push({
-            ...row,
-            message: { ...message, body: plainText(message.body) },
-            channel,
-            targetName: channel.name,
-            kind: 'channel',
-            href: `/discuss/${channel.id}?message=${message.id}`,
-          });
-          continue;
-        }
-        if (message.model !== 'project.task') continue;
-        const task = await odoo.read('project.task', Number(message.res_id), [
-          'name',
-          'project_id',
-        ]);
-        items.push({
-          ...row,
-          message: { ...message, body: plainText(message.body) },
-          task,
-          targetName: task.name,
-          kind: 'task',
-          href: `/tasks/${task.id}?tab=discussion&message=${message.id}`,
-        });
-      } catch (e) {
-        if (e instanceof AppError && [403, 404].includes(e.status)) continue;
-        throw e;
+        return await odoo.search(
+          model,
+          [['id', 'in', [...new Set(ids)]], ...extra],
+          fields,
+          ids.length,
+        );
+      } catch (error) {
+        if (error instanceof AppError && [403, 404].includes(error.status)) return [];
+        throw error;
       }
+    };
+    const messages = await readVisible(
+      'mail.message',
+      page.map((n) => relationId(n.mail_message_id)).filter((id): id is number => !!id),
+      ['body', 'model', 'res_id', 'author_id', 'date', 'subtype_id'],
+    );
+    const [tasks, channels] = await Promise.all([
+      readVisible(
+        'project.task',
+        messages.filter((m) => m.model === 'project.task').map((m) => Number(m.res_id)),
+        ['name', 'project_id', 'state'],
+      ),
+      readVisible(
+        'discuss.channel',
+        messages.filter((m) => m.model === 'discuss.channel').map((m) => Number(m.res_id)),
+        ['name', 'is_member'],
+        [['is_member', '=', true]],
+      ),
+    ]);
+    const byMessage = new Map(messages.map((m) => [m.id, m])),
+      byTask = new Map(tasks.map((t) => [t.id, t])),
+      byChannel = new Map(channels.map((c) => [c.id, c]));
+    const items = [];
+    for (const notification of page) {
+      const message = byMessage.get(relationId(notification.mail_message_id)!);
+      if (!message) continue;
+      const channel =
+        message.model === 'discuss.channel' ? byChannel.get(Number(message.res_id)) : undefined;
+      const task =
+        message.model === 'project.task' ? byTask.get(Number(message.res_id)) : undefined;
+      if (!channel && !task) continue;
+      items.push({
+        ...notification,
+        message: { ...message, body: plainText(message.body) },
+        ...(task ? { task } : { channel }),
+        targetName: (task || channel)!.name,
+        kind: task ? 'task' : 'channel',
+        href: task
+          ? `/tasks/${task.id}?tab=discussion&message=${message.id}`
+          : `/discuss/${channel!.id}?message=${message.id}`,
+      });
     }
-    return { available: true, items };
-  } catch (e) {
-    if (e instanceof AppError && e.status === 403)
+    return { available: true, items, nextCursor: raw.length > 80 ? page.at(-1)!.id : null };
+  } catch (error) {
+    if (error instanceof AppError && error.status === 403)
       return {
         available: false,
         items: [],
+        nextCursor: null,
         reason:
           'Odoo chưa cho phép tài khoản này đọc mail.notification qua External API. Hãy dùng hộp thư Odoo gốc.',
       };
-    throw e;
+    throw error;
   }
 }

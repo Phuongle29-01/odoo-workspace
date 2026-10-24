@@ -9,6 +9,7 @@ import { pool, rateLimit, readyDb } from '@/server/db';
 import { AppError, denied } from '@/server/errors';
 import { mutate } from '@/server/mutations';
 import { channels, channelMessages, requireChannel } from '@/server/discuss';
+import { previewType } from '@/server/preview';
 import { dashboard } from '@/server/dashboard';
 import {
   taskList,
@@ -120,6 +121,21 @@ export async function GET(request: Request, context: Context) {
     if (path[0] === 'tasks' && !path[1]) return taskList(odoo, params, uid);
     if (path[0] === 'tasks' && path[1]) {
       const id = positiveId(path[1]);
+      if (path[2] === 'children') {
+        await odoo.requireRecord('project.task', id);
+        const domain: unknown[] = [['parent_id', '=', id]];
+        if (params.get('before'))
+          domain.push(['id', '<', z.coerce.number().int().positive().parse(params.get('before'))]);
+        const rows = await odoo.search(
+          'project.task',
+          domain,
+          ['name', 'project_id', 'stage_id'],
+          21,
+          0,
+          'id desc',
+        );
+        return { items: rows.slice(0, 20), nextCursor: rows.length > 20 ? rows[19].id : null };
+      }
       if (path[2] === 'activities') {
         await odoo.requireRecord('project.task', id);
         return odoo.search(
@@ -144,13 +160,22 @@ export async function GET(request: Request, context: Context) {
         if (path[3]) {
           const row = await attachment(odoo, id, positiveId(path[3]));
           // Returned separately below to support binary downloads.
-          return { download: { name: row.name, data: row.datas } };
+          return {
+            download: {
+              name: row.name,
+              data: row.datas,
+              previewType:
+                params.get('preview') === '1'
+                  ? previewType(Buffer.from(String(row.datas || ''), 'base64'))
+                  : null,
+            },
+          };
         }
         return attachments(odoo, id);
       }
       return taskDetail(odoo, id, identity);
     }
-    if (path[0] === 'notifications') return notifications(odoo, uid);
+    if (path[0] === 'notifications') return notifications(odoo, uid, params);
     if (path[0] === 'discuss') {
       if (!path[1]) return channels(odoo);
       const cursor = z.coerce
@@ -225,6 +250,9 @@ export async function GET(request: Request, context: Context) {
         return new NextResponse(Buffer.from(payload.download.data || '', 'base64'), {
           headers: {
             'Content-Type': 'application/octet-stream',
+            ...(payload.download.previewType
+              ? { 'X-Workspace-Preview-Type': payload.download.previewType }
+              : {}),
             'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(String(payload.download.name || 'document'))}`,
             'Cache-Control': 'private, no-store',
             'X-Content-Type-Options': 'nosniff',
@@ -259,6 +287,7 @@ export async function POST(request: Request, context: Context) {
       const input = z
         .object({
           view: z.enum(['list', 'kanban', 'tree']).optional(),
+          focusMode: z.boolean().optional(),
           navWidth: z.number().int().min(160).max(280).optional(),
           collabWidth: z.number().int().min(280).max(420).optional(),
           navOpen: z.boolean().optional(),

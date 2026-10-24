@@ -4,6 +4,7 @@ import { HttpProxyAgent } from 'http-proxy-agent';
 import { getProxyForUrl } from 'proxy-from-env';
 import { AppError } from './errors';
 import { config } from './config';
+import { observeRpc } from './rpc-metrics';
 
 export type Credentials = { uid: number; password: string };
 export type Relation = [number, string] | false;
@@ -39,83 +40,91 @@ export function rpc(
   };
   const client =
     url.protocol === 'https:' ? xmlrpc.createSecureClient(options) : xmlrpc.createClient(options);
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(
-      () =>
-        reject(
-          new AppError(
-            504,
-            'ODOO_TIMEOUT',
-            'Odoo chưa phản hồi. Nếu vừa gửi thay đổi, hãy tải lại dữ liệu trước khi thử lại.',
-          ),
-        ),
-      17000,
-    );
-    client.methodCall(method, args, (error, value) => {
-      clearTimeout(timer);
-      if (error) {
-        const fault = error as {
-          message?: string;
-          faultCode?: number;
-          faultString?: string;
-          code?: string;
-        };
-        if (fault.code === 'ABORT_ERR')
-          return reject(
-            new AppError(
-              504,
-              'ODOO_TIMEOUT',
-              'Odoo chưa phản hồi. Hãy kiểm tra dữ liệu trước khi gửi lại thao tác ghi.',
+  return observeRpc(
+    () =>
+      new Promise((resolve, reject) => {
+        const timer = setTimeout(
+          () =>
+            reject(
+              new AppError(
+                504,
+                'ODOO_TIMEOUT',
+                'Odoo chưa phản hồi. Nếu vừa gửi thay đổi, hãy tải lại dữ liệu trước khi thử lại.',
+              ),
             ),
-          );
-        const text = `${fault.message || ''} ${fault.faultString || ''}`;
-        // Odoo 17's /xmlrpc/2 endpoints use numeric codes and human-readable fault strings.
-        if (fault.faultCode === 3 || fault.faultCode === 4 || /AccessError|AccessDenied/.test(text))
-          return reject(
-            new AppError(
-              403,
-              'ACCESS_DENIED',
-              'Odoo từ chối truy cập. Kiểm tra quyền hoặc đăng nhập lại.',
-            ),
-          );
-        if (/MissingError/.test(text))
-          return reject(
-            new AppError(
-              404,
-              'NOT_FOUND',
-              'Bản ghi không còn tồn tại hoặc bạn không còn quyền xem.',
-            ),
-          );
-        if (/WORKSPACE_CONFLICT/.test(text))
-          return reject(
-            new AppError(
-              409,
-              'CONFLICT',
-              'Nhiệm vụ đã được người khác sửa. Tải lại trước khi lưu.',
-            ),
-          );
-        if (fault.faultCode === 2 || /ValidationError|UserError/.test(text))
-          return reject(
-            new AppError(
-              422,
-              'ODOO_VALIDATION',
-              'Odoo không chấp nhận thao tác. Kiểm tra các giá trị, quan hệ và quyền.',
-            ),
-          );
-        return reject(
-          new AppError(
-            502,
-            'ODOO_UNAVAILABLE',
-            'Không thể hoàn tất yêu cầu với Odoo. Kiểm tra kết nối và cấu hình API.',
-          ),
+          17000,
         );
-      }
-      resolve(value);
-    });
-  });
+        client.methodCall(method, args, (error, value) => {
+          clearTimeout(timer);
+          if (error) {
+            const fault = error as {
+              message?: string;
+              faultCode?: number;
+              faultString?: string;
+              code?: string;
+            };
+            if (fault.code === 'ABORT_ERR')
+              return reject(
+                new AppError(
+                  504,
+                  'ODOO_TIMEOUT',
+                  'Odoo chưa phản hồi. Hãy kiểm tra dữ liệu trước khi gửi lại thao tác ghi.',
+                ),
+              );
+            const text = `${fault.message || ''} ${fault.faultString || ''}`;
+            // Odoo 17's /xmlrpc/2 endpoints use numeric codes and human-readable fault strings.
+            if (
+              fault.faultCode === 3 ||
+              fault.faultCode === 4 ||
+              /AccessError|AccessDenied/.test(text)
+            )
+              return reject(
+                new AppError(
+                  403,
+                  'ACCESS_DENIED',
+                  'Odoo từ chối truy cập. Kiểm tra quyền hoặc đăng nhập lại.',
+                ),
+              );
+            if (/MissingError/.test(text))
+              return reject(
+                new AppError(
+                  404,
+                  'NOT_FOUND',
+                  'Bản ghi không còn tồn tại hoặc bạn không còn quyền xem.',
+                ),
+              );
+            if (/WORKSPACE_CONFLICT/.test(text))
+              return reject(
+                new AppError(
+                  409,
+                  'CONFLICT',
+                  'Nhiệm vụ đã được người khác sửa. Tải lại trước khi lưu.',
+                ),
+              );
+            if (fault.faultCode === 2 || /ValidationError|UserError/.test(text))
+              return reject(
+                new AppError(
+                  422,
+                  'ODOO_VALIDATION',
+                  'Odoo không chấp nhận thao tác. Kiểm tra các giá trị, quan hệ và quyền.',
+                ),
+              );
+            return reject(
+              new AppError(
+                502,
+                'ODOO_UNAVAILABLE',
+                'Không thể hoàn tất yêu cầu với Odoo. Kiểm tra kết nối và cấu hình API.',
+              ),
+            );
+          }
+          resolve(value);
+        });
+      }),
+  );
 }
 
 export class Odoo {
+  private metadata = new Map<string, Promise<Fields>>();
   constructor(public credentials: Credentials) {}
   async call<T = unknown>(
     model: string,
@@ -134,9 +143,17 @@ export class Odoo {
     ])) as T;
   }
   fields(model: string) {
-    return this.call<Fields>(model, 'fields_get', [], {
-      attributes: ['string', 'type', 'readonly', 'selection', 'relation'],
-    });
+    let pending = this.metadata.get(model);
+    if (!pending) {
+      pending = this.call<Fields>(model, 'fields_get', [], {
+        attributes: ['string', 'type', 'readonly', 'selection', 'relation'],
+      }).catch((error) => {
+        this.metadata.delete(model);
+        throw error;
+      });
+      this.metadata.set(model, pending);
+    }
+    return pending;
   }
   async search(
     model: string,

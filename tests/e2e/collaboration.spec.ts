@@ -74,7 +74,7 @@ test('two employees: private ACL, notification, polling sync, stale edit conflic
       partner_ids: [(aUser.partner_id as number[])[0]],
     });
     await a.goto('/notifications');
-    const target = a.locator(`a[href="/tasks/${ids.child}?tab=discussion&message=${message}"]`);
+    const target = a.locator(`a[href="/tasks/${ids.child}?tab=discussion&message=${message}&focus=1"]`);
     await expect(target).toBeVisible();
     await target.click();
     await expect(a.locator(`#message-${message}`)).toHaveClass(/highlighted/);

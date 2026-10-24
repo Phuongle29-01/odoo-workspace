@@ -1,6 +1,12 @@
-# Kết quả xác minh — 23/10/2026
+# Kết quả xác minh
 
-## Bản UX hiện tại — kiểm tra local production
+## UX2 — 24/10/2026
+
+Typecheck, 15 unit và build production standalone đã chạy thành công. Integration mới: **30 passed, 0 failed, 0 skipped** trên Odoo17/Postgres16 thật. Lượt Chromium đầu: 36 passed/18 visual failed; cả **5 Odoo thật + 22 UI/accessibility** đều đạt. 18 visual khác gồm 12 ảnh UI thay đổi có chủ đích và 6 ảnh mới chưa có reference. Đã xem trước/sau và diff, cập nhật riêng reference Debian có provenance, giữ threshold50; lượt so sánh cuối và CI còn đang thực hiện tại commit này. Không coi lượt visual lỗi là pass.
+
+Xem [báo cáo UX2](ux2-report.md), [48 ảnh trước/sau](ux2/README.md), [performance raw](measurements/ux2-after.json), [phiếu ba nhân viên chưa chạy](ux2-user-study.md). Staging **BLOCKED**, không có xác minh doanh nghiệp mới. Kết quả 76 tests bên dưới là lịch sử.
+
+## Bản UX trước — lịch sử kiểm tra local production
 
 | Kiểm tra                      | Kết quả đã chạy                                                                                                                                                  |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |

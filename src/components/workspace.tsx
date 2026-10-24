@@ -1,6 +1,11 @@
 'use client';
 
-import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 import {
   useEffect,
   useRef,
@@ -839,22 +844,66 @@ function Notifications() {
     kind = params.get('kind') || 'all',
     subtype = params.get('subtype') || 'all';
   function filter(name: string, value: string) {
-    const next = new URLSearchParams(params.toString());
+    const next = new URLSearchParams(window.location.search);
+    if (name === 'read' || name === 'kind') next.delete('needs');
+    if (name === 'needs' && value === 'true') {
+      next.delete('read');
+      next.delete('kind');
+    }
     value === 'all' ? next.delete(name) : next.set(name, value);
-    router.replace(`/notifications?${next}`, { scroll: false });
+    window.history.replaceState(null, '', `/notifications?${next}`);
   }
   const me = useMe(),
-    notice = useNotice(),
-    data = useData<{
-      available: boolean;
-      reason?: string;
-      items: (Row & { message: Row; targetName: string; kind: string; href: string })[];
-    }>('notifications');
+    notice = useNotice();
+  type NotificationPage = {
+    available: boolean;
+    reason?: string;
+    nextCursor?: number | null;
+    items: (Row & { message: Row; targetName: string; kind: string; href: string; task?: Row })[];
+  };
+  const apiParams = new URLSearchParams();
+  for (const key of ['read', 'kind'])
+    if (params.get(key) && params.get(key) !== 'all') apiParams.set(key, params.get(key)!);
+  if (params.get('needs') === 'true') {
+    apiParams.set('read', 'unread');
+    apiParams.set('kind', 'task');
+  }
+  const from = params.get('from') || '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(from)) {
+    const date = new Date(`${from}T00:00:00`);
+    if (Number.isFinite(date.getTime())) apiParams.set('after', date.toISOString());
+  }
+  apiParams.sort();
+  const stream = useInfiniteQuery<NotificationPage, ApiError>({
+    queryKey: ['notifications', apiParams.toString()],
+    initialPageParam: 0,
+    queryFn: ({ pageParam, signal }) =>
+      api<NotificationPage>(
+        `notifications?${apiParams}${pageParam ? `&before=${pageParam}` : ''}`,
+        { signal },
+      ),
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    retry: false,
+    refetchInterval: 30000,
+  });
+  const first = stream.data?.pages[0];
+  const merged = [
+    ...new Map(
+      (stream.data?.pages || []).flatMap((page) => page.items).map((row) => [row.id, row]),
+    ).values(),
+  ];
+  const data = { ...stream, data: first ? { ...first, items: merged } : undefined };
+  const taskOptions = useData<{ projects: Row[] }>('task-options', true, false);
   const items = (data.data?.items || []).filter(
     (n) =>
       (read === 'all' || (read === 'read') === n.is_read) &&
       (kind === 'all' || n.kind === kind) &&
-      (subtype === 'all' || String(rid(n.message.subtype_id)) === subtype),
+      (subtype === 'all' || String(rid(n.message.subtype_id)) === subtype) &&
+      (!params.get('project') || rid(n.task?.project_id) === Number(params.get('project'))) &&
+      (params.get('needs') !== 'true' ||
+        (!n.is_read &&
+          n.kind === 'task' &&
+          !['1_done', '1_canceled'].includes(String(n.task?.state)))),
   );
   const subtypes = new Map(
     (data.data?.items || [])
@@ -869,6 +918,38 @@ function Notifications() {
         description="Mở đúng nhiệm vụ và bình luận liên quan từ thông báo Odoo."
       />
       <div className="notification-filters">
+        <button
+          className="button small"
+          aria-pressed={params.get('needs') === 'true'}
+          onClick={() => filter('needs', params.get('needs') === 'true' ? 'all' : 'true')}
+        >
+          Cần xử lý
+        </button>
+        <label>
+          <span>Từ ngày</span>
+          <input
+            type="date"
+            aria-label="Thông báo từ ngày"
+            value={from}
+            onChange={(e) => filter('from', e.target.value || 'all')}
+          />
+        </label>
+        <label>
+          <span className="sr-only">Dự án thông báo</span>
+          <select
+            aria-label="Dự án thông báo"
+            value={params.get('project') || 'all'}
+            onChange={(e) => filter('project', e.target.value)}
+          >
+            <option value="all">Tất cả dự án</option>
+            {taskOptions.data?.projects.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <div className="view-tabs" role="group" aria-label="Trạng thái thông báo">
           {[
             ['all', 'Tất cả'],
@@ -915,12 +996,12 @@ function Notifications() {
           </label>
         )}
         <span className="muted" aria-live="polite">
-          {items.length} thông báo trong lượt tải
+          {items.length} thông báo phù hợp đã tải
         </span>
       </div>
       {data.isPending ? (
         <Loading />
-      ) : data.error ? (
+      ) : data.error && !data.data ? (
         <ErrorBox error={data.error} retry={() => data.refetch()} />
       ) : !data.data?.available ? (
         <section className="panel">
@@ -942,7 +1023,7 @@ function Notifications() {
               <span className="activity-icon">
                 <MessageSquare size={18} />
               </span>
-              <Link href={n.href}>
+              <Link href={n.kind === 'task' ? `${n.href}&focus=1` : n.href}>
                 <span className="notification-kind">
                   {n.kind === 'task' ? 'Nhiệm vụ' : n.kind === 'channel' ? 'Thảo luận' : 'Odoo'} ·{' '}
                   {n.is_read ? 'Đã đọc' : 'Chưa đọc'}
@@ -978,7 +1059,37 @@ function Notifications() {
           ))}
         </section>
       ) : (
-        <Empty title="Chưa có thông báo liên quan đến nhiệm vụ hoặc hội thoại" />
+        <Empty
+          title={
+            stream.hasNextPage
+              ? 'Chưa có thông báo phù hợp trong phần đã tải'
+              : 'Chưa có thông báo liên quan đến nhiệm vụ hoặc hội thoại'
+          }
+          description={
+            stream.hasNextPage
+              ? 'Tải tiếp để kiểm tra các thông báo cũ hơn theo quyền của bạn.'
+              : undefined
+          }
+        />
+      )}
+      {stream.isFetching && !stream.isPending && (
+        <p className="helper" role="status">
+          Đang đồng bộ thông báo…
+        </p>
+      )}
+      {stream.error && data.data && (
+        <ErrorBox error={stream.error} retry={() => stream.refetch()} />
+      )}
+      {stream.hasNextPage && (
+        <div className="pagination">
+          <button
+            className="button"
+            disabled={stream.isFetching}
+            onClick={() => void stream.fetchNextPage()}
+          >
+            {stream.isFetching ? 'Đang tải…' : 'Tải thông báo cũ hơn'}
+          </button>
+        </div>
       )}
     </>
   );

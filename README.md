@@ -1,5 +1,7 @@
 # Odoo Smart Workspace
 
+> Cập nhật UX 2.0 (24/10/2026): xem [báo cáo và trạng thái kiểm thử](docs/ux2-report.md). Các kết quả 76 tests/hiệu năng và giới hạn chưa có preview/index bên dưới là lịch sử bản trước.
+
 Web app tiếng Việt kết nối **Odoo 17** bằng XML-RPC. Odoo giữ toàn bộ dữ liệu dự án/nhiệm vụ; PostgreSQL bổ trợ chỉ lưu phiên mã hóa, metadata chống gửi trùng, đánh dấu và lịch sử truy cập và tùy chọn giao diện riêng theo tài khoản.
 
 Bản giao diện mới: [ảnh trước/sau, tự kiểm thử A–H và giới hạn](docs/ux-review.md), [số đo hiệu năng](docs/performance.md), [kết quả xác minh](docs/validation.md).

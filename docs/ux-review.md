@@ -1,5 +1,7 @@
 # Rà soát giao diện và hướng dẫn nghiệm thu
 
+> Cập nhật UX 2.0 (24/10/2026): xem [báo cáo và trạng thái kiểm thử](ux2-report.md). Các kết quả 76 tests/hiệu năng và giới hạn chưa có preview/index bên dưới là lịch sử bản trước.
+
 Bản cải tiến giữ Next.js 16/React 19, adapter XML-RPC Odoo 17, cơ chế phiên PostgreSQL và addon atomic update hiện có. Mã giao diện được tách thành component dùng chung và các vùng tải khi cần; không đưa mock vào runtime.
 
 ## Vấn đề quan sát và thay đổi

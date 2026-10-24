@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { authenticate, Odoo } from '../src/server/odoo';
 import { pool } from '../src/server/db';
 import { hash } from '../src/server/crypto';
+import { testPdf, testPng } from '../tests/fixtures/documents';
 
 if (
   !['127.0.0.1', 'localhost'].includes(
@@ -102,9 +103,10 @@ try {
       const beforeA = await json(A, 'ui-preferences'),
         beforeB = await json(B, 'ui-preferences');
       try {
-        await json(A, 'ui-preferences', 'POST', { view: 'kanban', navWidth: 196 });
+        await json(A, 'ui-preferences', 'POST', { view: 'kanban', navWidth: 196, focusMode: true });
         const second = await login('A');
         assert.equal((await json(second, 'ui-preferences')).view, 'kanban');
+        assert.equal((await json(second, 'ui-preferences')).focusMode, true);
         assert.deepEqual(await json(B, 'ui-preferences'), beforeB);
         assert.equal(
           (await request(A, 'ui-preferences', 'POST', { identity: 'other', view: 'tree' })).status,
@@ -115,6 +117,7 @@ try {
         await json(A, 'ui-preferences', 'POST', {
           view: beforeA.view || 'list',
           navWidth: beforeA.navWidth || 180,
+          focusMode: beforeA.focusMode || false,
         });
       }
     },
@@ -485,6 +488,12 @@ try {
         ),
       );
       assert.equal((await request(B, `tasks/${task}`)).status, 403);
+      assert.equal(
+        (await json(B, 'tasks?q=Temporary%20access%20revocation')).items.some(
+          (t: { id: number }) => t.id === task,
+        ),
+        false,
+      );
     } finally {
       await admin.call('project.project', 'unlink', [[project]]);
       if (task) await pool().query('DELETE FROM workspace_preferences WHERE task_id=$1', [task]);
@@ -589,6 +598,160 @@ try {
       await admin.call('discuss.channel', 'unlink', [[channel, privateChannel]]);
     }
   });
+
+  await check(
+    'indexed search pagination, literal wildcards and name recompute use the employee ORM',
+    async () => {
+      const marker = `UX2-${randomUUID()}`;
+      const created: number[] = [];
+      try {
+        for (let batch = 0; batch < 3; batch++)
+          created.push(
+            ...(await admin.call<number[]>(
+              'project.task',
+              'create',
+              [
+                Array.from({ length: 42 }, (_, i) => ({
+                  name: `${marker} Hồ sơ ${batch * 42 + i}`,
+                  project_id: ids.projects[0],
+                  parent_id: ids.parent,
+                })),
+              ],
+              { context: { tracking_disable: true, mail_create_nosubscribe: true } },
+            )),
+          );
+        const first = await json(A, `tasks?q=${marker}`);
+        assert.equal(first.mode, 'indexed-orm');
+        assert.equal(first.items.length, 40);
+        assert.equal(first.nextCursor, 40);
+        const second = await json(B, `tasks?q=${marker}&cursor=40`);
+        assert.equal(second.items.length, 40);
+        assert.ok(
+          !second.items.some((t: { id: number }) =>
+            first.items.some((x: { id: number }) => x.id === t.id),
+          ),
+        );
+        await admin.call('project.task', 'write', [
+          [created[0]],
+          { name: `${marker} Đường 100%_x` },
+        ]);
+        const literal = await json(A, `tasks?q=${encodeURIComponent('duong 100%_x')}`);
+        assert.deepEqual(
+          literal.items.map((t: { id: number }) => t.id),
+          [created[0]],
+        );
+        assert.equal(
+          (await admin.read('project.task', created[0], ['workspace_search_name']))
+            .workspace_search_name,
+          `${marker.toLowerCase()} duong 100%_x`,
+        );
+        const childPage = await json(A, `tasks/${ids.parent}/children`);
+        assert.equal(childPage.items.length, 20);
+        assert.ok(childPage.nextCursor);
+        const next = await json(A, `tasks/${ids.parent}/children?before=${childPage.nextCursor}`);
+        assert.ok(next.items.every((t: { id: number }) => t.id < childPage.nextCursor));
+        assert.equal((await request(B, `tasks/${ids.secret}/children`)).status, 403);
+      } finally {
+        if (created.length) await admin.call('project.task', 'unlink', [created]);
+      }
+    },
+  );
+  await check(
+    'safe PDF/image previews preserve download headers and reject HTML and revoked task ACL',
+    async () => {
+      const created: number[] = [];
+      try {
+        for (const [name, bytes, type] of [
+          ['preview.pdf', testPdf(), 'application/pdf'],
+          ['preview.png', testPng, 'image/png'],
+          ['pretend.pdf', Buffer.from('<html><script>bad()</script>'), ''],
+        ] as const) {
+          const f = await json(
+            A,
+            `tasks/${ids.child}/attachments`,
+            'POST',
+            { name, data: bytes.toString('base64') },
+            randomUUID(),
+          );
+          created.push(f.id);
+          const response = await request(B, `tasks/${ids.child}/attachments/${f.id}?preview=1`);
+          assert.equal(response.status, type ? 200 : 415);
+          if (type) {
+            assert.equal(response.headers.get('x-workspace-preview-type'), type);
+            assert.match(response.headers.get('content-disposition') || '', /^attachment/);
+            assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+            assert.deepEqual(Buffer.from(await response.arrayBuffer()), bytes);
+          } else
+            assert.equal((await request(B, `tasks/${ids.child}/attachments/${f.id}`)).status, 200);
+          assert.equal(
+            (await request(B, `tasks/${ids.secret}/attachments/${f.id}?preview=1`)).status,
+            403,
+          );
+        }
+      } finally {
+        if (created.length) await admin.call('ir.attachment', 'unlink', [created]);
+      }
+    },
+  );
+  await check(
+    'notification keyset pagination and read/type/date filters batch only visible targets',
+    async () => {
+      const partner = (await B.odoo.read('res.users', B.uid, ['partner_id']))
+        .partner_id as number[];
+      const mids = await admin.call<number[]>(
+        'mail.message',
+        'create',
+        [
+          Array.from({ length: 85 }, () => ({
+            model: 'project.task',
+            res_id: ids.child,
+            body: 'UX2 pagination fixture',
+            message_type: 'comment',
+          })),
+        ],
+        { context: { tracking_disable: true } },
+      );
+      try {
+        await admin.call('mail.notification', 'create', [
+          mids.map((id) => ({
+            mail_message_id: id,
+            res_partner_id: partner[0],
+            notification_type: 'inbox',
+            is_read: false,
+          })),
+        ]);
+        const response = await request(B, 'notifications?read=unread&kind=task');
+        assert.equal(response.status, 200);
+        assert.match(response.headers.get('server-timing') || '', /4 RPC/);
+        const first = await response.json();
+        assert.equal(first.items.length, 80);
+        assert.ok(first.nextCursor);
+        const next = await json(
+          B,
+          `notifications?read=unread&kind=task&before=${first.nextCursor}`,
+        );
+        assert.ok(next.items.some((n: { message: { id: number } }) => mids.includes(n.message.id)));
+        assert.ok(
+          !next.items.some((n: { id: number }) =>
+            first.items.some((x: { id: number }) => x.id === n.id),
+          ),
+        );
+        assert.ok(first.items.every((n: { task: { state: string } }) => !!n.task.state));
+        assert.equal(
+          (await json(B, 'notifications?after=2035-01-01T00%3A00%3A00Z')).items.length,
+          0,
+        );
+        assert.equal((await request(B, 'notifications?before=-1')).status, 400);
+        assert.ok(
+          !(await json(A, 'notifications')).items.some((n: { message: { id: number } }) =>
+            mids.includes(n.message.id),
+          ),
+        );
+      } finally {
+        await admin.call('mail.message', 'unlink', [mids]);
+      }
+    },
+  );
   await check('uncertain mutation keys are never retried upstream', async () => {
     const key = randomUUID(),
       data = { task: ids.child, text: 'Must not be posted', internal: false };

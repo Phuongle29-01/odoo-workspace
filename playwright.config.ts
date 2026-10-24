@@ -55,6 +55,17 @@ export default defineConfig({
       testMatch: 'ui/**/*.spec.ts',
       use: { trace: 'retain-on-failure', viewport: { width: 1440, height: 900 } },
     },
+    ...(process.env.CROSS_BROWSER === '1'
+      ? (['firefox', 'webkit'] as const).map((name) => ({
+          name,
+          testMatch: 'ui/ux2.spec.ts',
+          use: {
+            browserName: name,
+            viewport: { width: 1440, height: 900 },
+            trace: 'retain-on-failure' as const,
+          },
+        }))
+      : []),
     ...(
       [
         ['desktop', 1440, 900],

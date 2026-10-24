@@ -2,6 +2,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { api, useData } from './client';
 export type UiPreferences = {
+  focusMode?: boolean;
   view?: 'list' | 'kanban' | 'tree';
   navWidth?: number;
   collabWidth?: number;

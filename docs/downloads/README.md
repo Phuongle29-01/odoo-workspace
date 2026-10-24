@@ -1,5 +1,7 @@
 # Tải mã nguồn để ChatGPT đọc
 
+> Các tệp export trong thư mục này là snapshot lịch sử `f65357d`, trước UX2. Mã nguồn UX2 đầy đủ nằm ở nhánh `feature/odoo17-smart-workspace` và PR #1; tải ZIP của nhánh đó để có bản mới.
+
 1. Tải `ODOO_SOURCE_FOR_CHATGPT.txt` về máy.
 2. Trong ChatGPT/Codex, bấm nút **đính kèm tệp** rồi chọn file TXT vừa tải. Đừng chỉ dán link GitHub private.
 3. Yêu cầu: “Đọc file mã nguồn này, bắt đầu bằng README và docs/CODEX_HANDOFF.md. Giải thích kiến trúc, xác minh trạng thái rồi triển khai theo phạm vi tôi cấp quyền.”

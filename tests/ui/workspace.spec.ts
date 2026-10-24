@@ -21,7 +21,7 @@ test('accentless keyboard search carries cross-project and duplicate-name contex
   await search.press('ArrowDown');
   await expect(search).toHaveAttribute('aria-activedescendant', 'quick-result-0');
   await search.press('Enter');
-  await expect(page).toHaveURL(/\/tasks\/102$/);
+  await expect(page).toHaveURL(/\/tasks\/102\?focus=1$/);
   const crumbs = page.getByRole('navigation', { name: 'Đường dẫn nhiệm vụ' });
   await expect(crumbs).toContainText('Nhà máy B');
   await expect(crumbs).toContainText('Rà soát hồ sơ');

@@ -28,6 +28,7 @@ import { useMe, useNotice } from './context';
 import { Badge, Empty, ErrorBox, Loading } from './ui';
 import TaskTable from './task-table';
 import TaskWorkbench, { TaskSummary, TaskActivities } from './task-workbench';
+const DocumentPreview = dynamic(() => import('./document-preview'));
 const RichTextEditor = dynamic(() => import('./rich-text-editor'), {
   loading: () => <p role="status">Đang mở trình soạn thảo…</p>,
 });
@@ -217,7 +218,7 @@ export default function Task({ id }: { id: number }) {
         ].map(([key, text]) => (
           <Link
             key={key}
-            href={`/tasks/${id}?tab=${key}`}
+            href={`/tasks/${id}?${new URLSearchParams({ ...Object.fromEntries(params), tab: key })}`}
             aria-current={tab === key ? 'page' : undefined}
             className={tab === key ? 'active' : ''}
           >
@@ -615,7 +616,9 @@ function Chatter({ id, enabled }: { id: number; enabled: boolean }) {
 function TaskDocuments({ id, enabled }: { id: number; enabled: boolean }) {
   const notice = useNotice(),
     data = useData<Row[]>(`tasks/${id}/attachments`);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(false),
+    [preview, setPreview] = useState<Row | null>(null);
+  const previewOpener = useRef<HTMLButtonElement | null>(null);
   return (
     <section className="panel">
       <div className="panel-heading">
@@ -666,7 +669,7 @@ function TaskDocuments({ id, enabled }: { id: number; enabled: boolean }) {
       ) : data.data?.length ? (
         <div className="file-list">
           {data.data.map((f) => (
-            <a href={`/api/tasks/${id}/attachments/${f.id}`} key={f.id} className="file-row">
+            <div key={f.id} className="file-row">
               <span className="file-icon">
                 <Files size={21} />
               </span>
@@ -676,8 +679,24 @@ function TaskDocuments({ id, enabled }: { id: number; enabled: boolean }) {
                   {Math.ceil(Number(f.file_size || 0) / 1024)} KB · {dateLabel(f.create_date)}
                 </small>
               </div>
-              <ArrowUpRight size={18} />
-            </a>
+              <button
+                className="button small"
+                onClick={(e) => {
+                  previewOpener.current = e.currentTarget;
+                  setPreview(f);
+                }}
+                aria-label={`Xem trước ${f.name}`}
+              >
+                Xem trước
+              </button>
+              <a
+                className="icon-button"
+                href={`/api/tasks/${id}/attachments/${f.id}`}
+                aria-label={`Tải xuống ${f.name}`}
+              >
+                <ArrowUpRight size={18} />
+              </a>
+            </div>
           ))}
         </div>
       ) : (
@@ -686,9 +705,19 @@ function TaskDocuments({ id, enabled }: { id: number; enabled: boolean }) {
           description="Tệp được lưu tại nhiệm vụ gốc trên Odoo; quyền tải xuống được kiểm tra lại mỗi lần."
         />
       )}
+      {preview && (
+        <DocumentPreview
+          task={id}
+          file={preview}
+          onClose={() => {
+            setPreview(null);
+            requestAnimationFrame(() => previewOpener.current?.focus());
+          }}
+        />
+      )}
       <p className="helper padded-note">
-        Tải xuống để xem hoặc chỉnh sửa bằng ứng dụng phù hợp. Chỉnh sửa đồng thời và xem trước
-        trong trình duyệt chưa được triển khai.
+        Xem trước PDF và ảnh an toàn trong nhiệm vụ (tối đa 5 MB). Tải xuống để chỉnh sửa bằng ứng
+        dụng phù hợp. Chỉnh sửa đồng thời trong trình duyệt chưa được triển khai.
       </p>
     </section>
   );

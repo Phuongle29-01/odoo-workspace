@@ -1,5 +1,7 @@
 # Bàn giao Odoo Smart Workspace cho Codex triển khai
 
+> Cập nhật UX 2.0 (24/10/2026): xem [báo cáo và trạng thái kiểm thử](ux2-report.md). Các kết quả 76 tests/hiệu năng và giới hạn chưa có preview/index bên dưới là lịch sử bản trước.
+
 **Ngày soạn:** 24/10/2026 — múi giờ Asia/Saigon.  
 **Ngôn ngữ làm việc:** tiếng Việt.  
 **Mục đích:** tài liệu độc lập để một Codex khác hiểu đúng sản phẩm, lấy đúng mã nguồn, chạy kiểm thử và triển khai theo phạm vi được chủ sở hữu cho phép. Tài liệu không chứa mật khẩu, API key hoặc khóa mã hóa.
