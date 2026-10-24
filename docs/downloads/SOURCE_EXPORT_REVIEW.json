@@ -1,0 +1,50 @@
+{
+  "source_commit": "f65357d9350631b3cb7e38be307484f3ef405eea",
+  "included_files": 150,
+  "text_files": 87,
+  "source_files": 31,
+  "known_secret_matches_after_export": 0,
+  "credential_pattern_matches_after_export": 0,
+  "redactions": [
+    {
+      "path": "README.md",
+      "kind": "enterprise-host-replaced-by-example"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "kind": "enterprise-host-replaced-by-example"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "kind": "enterprise-host-replaced-by-example"
+    },
+    {
+      "path": "docs/repository-audit.md",
+      "kind": "enterprise-host-replaced-by-example"
+    },
+    {
+      "path": "docs/ux-review.md",
+      "kind": "enterprise-host-replaced-by-example"
+    },
+    {
+      "path": "docs/validation.md",
+      "kind": "enterprise-host-replaced-by-example"
+    }
+  ],
+  "excluded_tracked_files": [],
+  "not_included": [
+    "real .env files",
+    "password/API-key/private-key files",
+    "database volumes/dumps",
+    "Git internals",
+    "node_modules/build/cache",
+    "local reports/traces/session data"
+  ],
+  "notes": [
+    ".env.example contains empty configuration/placeholders only.",
+    "Synthetic values in unit tests and example.test fixtures are retained as test data.",
+    "Screenshots are repository test fixtures, not enterprise business screenshots.",
+    "Automated scanning plus review reduces risk; identifiers named password/token/secret in code are not credential values.",
+    "Deployment requires new credentials supplied separately through a secure channel."
+  ]
+}

@@ -1,0 +1,36 @@
+import { chromium, expect } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import { mockWorkspace, views } from '../tests/fixtures/workspace';
+const browser = await chromium.launch({ args: ['--no-sandbox'] });
+try {
+  for (const [device, width, height] of [
+    ['desktop', 1440, 900],
+    ['laptop', 1366, 768],
+    ['mobile', 390, 844],
+  ] as const) {
+    const context = await browser.newContext({
+      viewport: { width, height },
+      locale: 'vi-VN',
+      timezoneId: 'Asia/Ho_Chi_Minh',
+      reducedMotion: 'reduce',
+    });
+    const page = await context.newPage();
+    await mockWorkspace(page);
+    await mkdir(`.artifacts/ui-after/${device}`, { recursive: true });
+    for (const view of views) {
+      await page.goto(`http://localhost:3000${view.url}`);
+      await page.getByRole('heading', { name: view.ready, exact: true }).waitFor();
+      await expect(page.locator('.skeleton')).toHaveCount(0);
+      await page.evaluate(() => document.fonts.ready);
+      await page.screenshot({
+        path: `.artifacts/ui-after/${device}/${view.name}.png`,
+        fullPage: true,
+        animations: 'disabled',
+      });
+    }
+    await context.close();
+  }
+} finally {
+  await browser.close();
+}
+console.log('Captured 21 after screenshots with fixed browser-only fixtures.');

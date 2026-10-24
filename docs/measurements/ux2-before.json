@@ -1,0 +1,289 @@
+{
+  "mode": "before",
+  "runtime": "Warm development API; real local Odoo17/Postgres; one identity; same host for before/after; no SLA",
+  "screens": [
+    {
+      "path": "dashboard",
+      "samples": [
+        {
+          "ms": 264,
+          "timing": "odoo;dur=842.1;desc=\"11 RPC\""
+        },
+        {
+          "ms": 232,
+          "timing": "odoo;dur=596.7;desc=\"11 RPC\""
+        },
+        {
+          "ms": 216,
+          "timing": "odoo;dur=614.1;desc=\"11 RPC\""
+        }
+      ]
+    },
+    {
+      "path": "tasks/2",
+      "samples": [
+        {
+          "ms": 163,
+          "timing": "odoo;dur=144.1;desc=\"8 RPC\""
+        },
+        {
+          "ms": 191,
+          "timing": "odoo;dur=168.2;desc=\"8 RPC\""
+        },
+        {
+          "ms": 182,
+          "timing": "odoo;dur=161.7;desc=\"8 RPC\""
+        }
+      ]
+    },
+    {
+      "path": "notifications",
+      "samples": [
+        {
+          "ms": 410,
+          "timing": "odoo;dur=385.2;desc=\"21 RPC\""
+        },
+        {
+          "ms": 428,
+          "timing": "odoo;dur=396.2;desc=\"21 RPC\""
+        },
+        {
+          "ms": 406,
+          "timing": "odoo;dur=381.8;desc=\"21 RPC\""
+        }
+      ]
+    }
+  ],
+  "growth": [
+    {
+      "tasks": 100,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 116,
+          "timing": "odoo;dur=94.5;desc=\"3 RPC\""
+        },
+        {
+          "ms": 112,
+          "timing": "odoo;dur=93.7;desc=\"3 RPC\""
+        },
+        {
+          "ms": 104,
+          "timing": "odoo;dur=89.1;desc=\"3 RPC\""
+        }
+      ],
+      "results": 0,
+      "scanned": 100,
+      "mode": "live-accent-scan",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 100,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 129,
+          "timing": "odoo;dur=107.3;desc=\"4 RPC\""
+        },
+        {
+          "ms": 148,
+          "timing": "odoo;dur=123.7;desc=\"4 RPC\""
+        },
+        {
+          "ms": 129,
+          "timing": "odoo;dur=108.6;desc=\"4 RPC\""
+        }
+      ],
+      "results": 1,
+      "scanned": 100,
+      "mode": "live-accent-scan",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 500,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 340,
+          "timing": "odoo;dur=315.4;desc=\"7 RPC\""
+        },
+        {
+          "ms": 320,
+          "timing": "odoo;dur=287.8;desc=\"7 RPC\""
+        },
+        {
+          "ms": 311,
+          "timing": "odoo;dur=284.1;desc=\"7 RPC\""
+        }
+      ],
+      "results": 0,
+      "scanned": 500,
+      "mode": "live-accent-scan",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 500,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 352,
+          "timing": "odoo;dur=320.4;desc=\"8 RPC\""
+        },
+        {
+          "ms": 323,
+          "timing": "odoo;dur=292.8;desc=\"8 RPC\""
+        },
+        {
+          "ms": 321,
+          "timing": "odoo;dur=298.6;desc=\"8 RPC\""
+        }
+      ],
+      "results": 2,
+      "scanned": 500,
+      "mode": "live-accent-scan",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 1100,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 522,
+          "timing": "odoo;dur=487.1;desc=\"11 RPC\""
+        },
+        {
+          "ms": 586,
+          "timing": "odoo;dur=544.4;desc=\"11 RPC\""
+        },
+        {
+          "ms": 544,
+          "timing": "odoo;dur=509.9;desc=\"11 RPC\""
+        }
+      ],
+      "results": 0,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    },
+    {
+      "tasks": 1100,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 526,
+          "timing": "odoo;dur=494.0;desc=\"12 RPC\""
+        },
+        {
+          "ms": 547,
+          "timing": "odoo;dur=509.2;desc=\"12 RPC\""
+        },
+        {
+          "ms": 569,
+          "timing": "odoo;dur=537.1;desc=\"12 RPC\""
+        }
+      ],
+      "results": 2,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    },
+    {
+      "tasks": 5000,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 528,
+          "timing": "odoo;dur=497.4;desc=\"11 RPC\""
+        },
+        {
+          "ms": 574,
+          "timing": "odoo;dur=532.3;desc=\"11 RPC\""
+        },
+        {
+          "ms": 538,
+          "timing": "odoo;dur=504.9;desc=\"11 RPC\""
+        }
+      ],
+      "results": 0,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    },
+    {
+      "tasks": 5000,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 527,
+          "timing": "odoo;dur=494.9;desc=\"12 RPC\""
+        },
+        {
+          "ms": 547,
+          "timing": "odoo;dur=513.2;desc=\"12 RPC\""
+        },
+        {
+          "ms": 536,
+          "timing": "odoo;dur=504.1;desc=\"12 RPC\""
+        }
+      ],
+      "results": 2,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    },
+    {
+      "tasks": 10000,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 551,
+          "timing": "odoo;dur=514.9;desc=\"11 RPC\""
+        },
+        {
+          "ms": 522,
+          "timing": "odoo;dur=484.9;desc=\"11 RPC\""
+        },
+        {
+          "ms": 525,
+          "timing": "odoo;dur=493.3;desc=\"11 RPC\""
+        }
+      ],
+      "results": 0,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    },
+    {
+      "tasks": 10000,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 519,
+          "timing": "odoo;dur=488.5;desc=\"12 RPC\""
+        },
+        {
+          "ms": 582,
+          "timing": "odoo;dur=541.8;desc=\"12 RPC\""
+        },
+        {
+          "ms": 575,
+          "timing": "odoo;dur=538.2;desc=\"12 RPC\""
+        }
+      ],
+      "results": 2,
+      "scanned": 1000,
+      "mode": "live-accent-scan",
+      "nextCursor": 1000,
+      "scanLimited": true
+    }
+  ]
+}

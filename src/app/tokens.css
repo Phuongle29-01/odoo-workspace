@@ -1,0 +1,40 @@
+/* Shared semantic tokens. Inter is served locally, including Vietnamese glyphs. */
+:root {
+  --font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --sidebar: #ffffff;
+  --text: #18243b;
+  --muted: #526078;
+  --line: #dce2ec;
+  --purple: #4338ca;
+  --purple-dark: #3730a3;
+  --purple-light: #eeedff;
+  --green: #176647;
+  --danger: #a52632;
+  --warning: #835510;
+  --focus: #4338ca;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --shadow: 0 2px 8px #18243b05;
+}
+[data-theme='dark'] {
+  --bg: #111827;
+  --panel: #1c2535;
+  --sidebar: #172030;
+  --text: #edf2fc;
+  --muted: #b3bfd3;
+  --line: #3c4960;
+  --purple: #bcb5ff;
+  --purple-dark: #d4cfff;
+  --purple-light: #302d51;
+  --green: #8cddba;
+  --danger: #ffacb3;
+  --warning: #f4ce87;
+  --focus: #c7c2ff;
+}

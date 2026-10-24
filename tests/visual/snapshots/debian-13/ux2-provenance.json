@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-24",
+  "renderer": "Debian 13 Chromium 156",
+  "source": "Production standalone UX2; same fixed browser fixture as visual tests; see commit adding this file and docs/ux2/README.md",
+  "review": "Before/after contact sheets and full search, task, notifications, Discuss screenshots opened. Changed text/controls/history ordering expected; no layout overflow. Original unaffected login/dashboard/project detail references retained. maxDiffPixels remains 50.",
+  "files": [
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/search.png",
+      "sha256": "b3eca9750d142f3338a29f5264efbb0aaa17ffb22a37189c4e5cf913815f6806",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/task.png",
+      "sha256": "3a615917475d13ef221ba633fe7365d69f32f7d64d16396840875f5be8937a84",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/notifications.png",
+      "sha256": "6e45bd8c91b9e102ccd32e0172563e02b3544e81b708510e9f19e0c37e3718b6",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/discuss.png",
+      "sha256": "09519669fa31ace6146e5fbead705ef507fc1ebda05eec02455c4c25609d77e0",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/projects.png",
+      "sha256": "12e5a6d36bef18b3b69afb27cd95617af3898fc25423415751119d833ef74321",
+      "reason": "New requested Project List/Task List coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/desktop/tasks.png",
+      "sha256": "8d8be7f5161db405e82079b6b85b2079b69b4c6abfa80b4cfe688d82bb63c3c0",
+      "reason": "New requested Project List/Task List coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/search.png",
+      "sha256": "796663bac976360dedc278785b0591779b76d4044ea0e9939072fa51d8885faa",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/task.png",
+      "sha256": "5a4d1a286d5e8ae5f45cc5be7f2be1f78c55e816909964f4f52974cb8f8b4a70",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/notifications.png",
+      "sha256": "7426b2d79b04aec9b515db33d444c75fb72fd0619c2bd6a27c41ceb4d4247f6d",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/discuss.png",
+      "sha256": "f5875f56103b14a54b7b5ddb68684eb568a8fef0353acb00dc9896e3e489f84f",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/projects.png",
+      "sha256": "e187669de1d11a44b463f6f71018396710ad96b42ea3ad3f6fbc194a22d401f8",
+      "reason": "New requested Project List/Task List coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/laptop/tasks.png",
+      "sha256": "6cd096e9546548cc001d4ffdb6d87e8aef004931aa9f977ce7be690e12acdb9a",
+      "reason": "New requested Project List/Task List coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/search.png",
+      "sha256": "458e69c1ef28fa670507944a8edd33ad3d9b97b6f1453aeed080615e819a0c7c",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/task.png",
+      "sha256": "903eaa58fdb6972e215dad4a2accc34ea68e9235361453ae0587975ba3a84be2",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/notifications.png",
+      "sha256": "12646932c76536c998f9e5e1e99092512461566c4f33af4968c618252efd0bff",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/discuss.png",
+      "sha256": "48734f3f152735c87f88ad5f1e69881687895530b4a33639a1517ec2d31f4f41",
+      "reason": "UX2 reviewed changed UI"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/projects.png",
+      "sha256": "4ad193059645219c7cacae4807c9a7f14e3f4274f73fa17dfb9bcbc667458a38",
+      "reason": "New requested Project List/Task List coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/debian-13/mobile/tasks.png",
+      "sha256": "1e312fd6ff3a8b9b3313c042e49a363c3ed0a691ccf3268ba04547dc7b97db33",
+      "reason": "New requested Project List/Task List coverage"
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "mode": "after",
+  "runtime": "Warm development API; real local Odoo17/Postgres; one identity; same host for before/after; no SLA",
+  "screens": [
+    {
+      "path": "dashboard",
+      "samples": [
+        {
+          "ms": 389,
+          "timing": "odoo;dur=1298.7;desc=\"11 RPC\""
+        },
+        {
+          "ms": 292,
+          "timing": "odoo;dur=709.2;desc=\"11 RPC\""
+        },
+        {
+          "ms": 290,
+          "timing": "odoo;dur=697.2;desc=\"11 RPC\""
+        }
+      ]
+    },
+    {
+      "path": "tasks/2",
+      "samples": [
+        {
+          "ms": 196,
+          "timing": "odoo;dur=170.9;desc=\"8 RPC\""
+        },
+        {
+          "ms": 203,
+          "timing": "odoo;dur=171.8;desc=\"8 RPC\""
+        },
+        {
+          "ms": 158,
+          "timing": "odoo;dur=139.4;desc=\"8 RPC\""
+        }
+      ]
+    },
+    {
+      "path": "notifications",
+      "samples": [
+        {
+          "ms": 141,
+          "timing": "odoo;dur=118.7;desc=\"4 RPC\""
+        },
+        {
+          "ms": 140,
+          "timing": "odoo;dur=113.6;desc=\"4 RPC\""
+        },
+        {
+          "ms": 151,
+          "timing": "odoo;dur=126.4;desc=\"4 RPC\""
+        }
+      ]
+    }
+  ],
+  "growth": [
+    {
+      "tasks": 10000,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 106,
+          "timing": "odoo;dur=89.4;desc=\"4 RPC\""
+        },
+        {
+          "ms": 105,
+          "timing": "odoo;dur=89.9;desc=\"4 RPC\""
+        },
+        {
+          "ms": 103,
+          "timing": "odoo;dur=83.6;desc=\"4 RPC\""
+        }
+      ],
+      "results": 0,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 10000,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 125,
+          "timing": "odoo;dur=106.0;desc=\"5 RPC\""
+        },
+        {
+          "ms": 107,
+          "timing": "odoo;dur=93.3;desc=\"5 RPC\""
+        },
+        {
+          "ms": 122,
+          "timing": "odoo;dur=110.0;desc=\"5 RPC\""
+        }
+      ],
+      "results": 5,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 5000,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 112,
+          "timing": "odoo;dur=96.8;desc=\"4 RPC\""
+        },
+        {
+          "ms": 96,
+          "timing": "odoo;dur=79.3;desc=\"4 RPC\""
+        },
+        {
+          "ms": 101,
+          "timing": "odoo;dur=86.8;desc=\"4 RPC\""
+        }
+      ],
+      "results": 0,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 5000,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 146,
+          "timing": "odoo;dur=125.7;desc=\"5 RPC\""
+        },
+        {
+          "ms": 149,
+          "timing": "odoo;dur=125.9;desc=\"5 RPC\""
+        },
+        {
+          "ms": 121,
+          "timing": "odoo;dur=103.8;desc=\"5 RPC\""
+        }
+      ],
+      "results": 4,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 1100,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 118,
+          "timing": "odoo;dur=99.2;desc=\"4 RPC\""
+        },
+        {
+          "ms": 97,
+          "timing": "odoo;dur=82.0;desc=\"4 RPC\""
+        },
+        {
+          "ms": 100,
+          "timing": "odoo;dur=83.2;desc=\"4 RPC\""
+        }
+      ],
+      "results": 0,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 1100,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 173,
+          "timing": "odoo;dur=156.3;desc=\"5 RPC\""
+        },
+        {
+          "ms": 147,
+          "timing": "odoo;dur=122.1;desc=\"5 RPC\""
+        },
+        {
+          "ms": 157,
+          "timing": "odoo;dur=140.6;desc=\"5 RPC\""
+        }
+      ],
+      "results": 3,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 500,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 110,
+          "timing": "odoo;dur=93.7;desc=\"4 RPC\""
+        },
+        {
+          "ms": 89,
+          "timing": "odoo;dur=77.0;desc=\"4 RPC\""
+        },
+        {
+          "ms": 96,
+          "timing": "odoo;dur=81.8;desc=\"4 RPC\""
+        }
+      ],
+      "results": 0,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 500,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 141,
+          "timing": "odoo;dur=117.7;desc=\"5 RPC\""
+        },
+        {
+          "ms": 153,
+          "timing": "odoo;dur=129.6;desc=\"5 RPC\""
+        },
+        {
+          "ms": 136,
+          "timing": "odoo;dur=111.7;desc=\"5 RPC\""
+        }
+      ],
+      "results": 2,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 100,
+      "query": "khongco-ketqua-ux2",
+      "samples": [
+        {
+          "ms": 102,
+          "timing": "odoo;dur=84.2;desc=\"4 RPC\""
+        },
+        {
+          "ms": 97,
+          "timing": "odoo;dur=81.9;desc=\"4 RPC\""
+        },
+        {
+          "ms": 149,
+          "timing": "odoo;dur=130.2;desc=\"4 RPC\""
+        }
+      ],
+      "results": 0,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    },
+    {
+      "tasks": 100,
+      "query": "kiem tra ho so",
+      "samples": [
+        {
+          "ms": 149,
+          "timing": "odoo;dur=133.9;desc=\"5 RPC\""
+        },
+        {
+          "ms": 170,
+          "timing": "odoo;dur=145.2;desc=\"5 RPC\""
+        },
+        {
+          "ms": 137,
+          "timing": "odoo;dur=118.1;desc=\"5 RPC\""
+        }
+      ],
+      "results": 1,
+      "mode": "indexed-orm",
+      "nextCursor": null,
+      "scanLimited": false
+    }
+  ]
+}

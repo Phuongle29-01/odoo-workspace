@@ -1,0 +1,149 @@
+[
+  {
+    "device": "desktop",
+    "screen": "login",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 111
+  },
+  {
+    "device": "desktop",
+    "screen": "dashboard",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 154
+  },
+  {
+    "device": "desktop",
+    "screen": "search",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 95
+  },
+  {
+    "device": "desktop",
+    "screen": "project",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 152
+  },
+  {
+    "device": "desktop",
+    "screen": "task",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 150
+  },
+  {
+    "device": "desktop",
+    "screen": "notifications",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 59
+  },
+  {
+    "device": "desktop",
+    "screen": "discuss",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 107
+  },
+  {
+    "device": "laptop",
+    "screen": "login",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 110
+  },
+  {
+    "device": "laptop",
+    "screen": "dashboard",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 143
+  },
+  {
+    "device": "laptop",
+    "screen": "search",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 84
+  },
+  {
+    "device": "laptop",
+    "screen": "project",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 141
+  },
+  {
+    "device": "laptop",
+    "screen": "task",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 139
+  },
+  {
+    "device": "laptop",
+    "screen": "notifications",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": "within 50 pixels"
+  },
+  {
+    "device": "laptop",
+    "screen": "discuss",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 96
+  },
+  {
+    "device": "mobile",
+    "screen": "login",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 107
+  },
+  {
+    "device": "mobile",
+    "screen": "dashboard",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 56
+  },
+  {
+    "device": "mobile",
+    "screen": "search",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": "within 50 pixels"
+  },
+  {
+    "device": "mobile",
+    "screen": "project",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 55
+  },
+  {
+    "device": "mobile",
+    "screen": "task",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": 227
+  },
+  {
+    "device": "mobile",
+    "screen": "notifications",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": "within 50 pixels"
+  },
+  {
+    "device": "mobile",
+    "screen": "discuss",
+    "sourceRun": 39978725935,
+    "sourceCommit": "da2a4d235c844701d4e7b9615076b5bedda3fc5b",
+    "changedPixelsAgainstDebian": "within 50 pixels"
+  }
+]
