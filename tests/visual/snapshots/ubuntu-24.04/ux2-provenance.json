@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-24",
+  "application_commit": "25254550547db666176f32eb03f95ab58df8447f",
+  "source": "Local isolated Ubuntu24.04 container, ubuntu image digest sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac; Chromium156/build1248, fixed browser fixture; production app Docker c64cc3f8",
+  "environment": "Playwright install-deps chromium plus fonts-dejavu-core, matching preinstalled CI fallback for command glyph. FT 2.13.2+dfsg-1ubuntu0.2, Fontconfig2.15.0-1.1ubuntu2. Original unchanged references retained.",
+  "review": "Same expected UX2 controls/content as reviewed Debian before/after. CI40057573679 functional tests passed and its logs showed only the expected 18 changed/missing visual references; artifact zip host17 was blocked, so references are from the inspected local Ubuntu renderer, not claimed as CI images. Threshold50 unchanged.",
+  "files": [
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/search.png",
+      "sha256": "c7482536b1830d87a931d972fb586be903fb1784be3bc62452bdf2643792686f",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/task.png",
+      "sha256": "141dcfce32bccdde626c3c23c4c49a8f929dd961b077bd6d5a59c6eeb2cd5516",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/notifications.png",
+      "sha256": "7656c6c737b9d2f7f4826aa8d62e4e72fa3f27f90fbf5276a5cc1b324ebcba45",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/discuss.png",
+      "sha256": "fc258af48c161d3c9e9898e1150f93495000cc451c6732b1994b845065ade5be",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/projects.png",
+      "sha256": "5ca922ec673fc55bc912f62962f931613bbc2942899e51ada6b63127e02cabd0",
+      "reason": "New screen coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/desktop/tasks.png",
+      "sha256": "5a2ebd0a1c731ca410eaf491cdeecdf7e357e0e09553093a9b7bb0237900a641",
+      "reason": "New screen coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/search.png",
+      "sha256": "62f7f719ac6daf7de4c7b24a549b93c22bd029dc5d6bc5a647512bbbcc8a598a",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/task.png",
+      "sha256": "51d28ba9cd115f3a7d51ee36e3a955fd818da151f0f0f7f923590fe197746aa8",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/notifications.png",
+      "sha256": "306151f8bd6aa0266bf2c2d8f8584291a5bd64e9fe1e17e9ad94e94d566f6147",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/discuss.png",
+      "sha256": "70af1ea43897a12bd2f832f73654bcfce3748a415ea55f16e173d6b84bc28395",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/projects.png",
+      "sha256": "53f50435387c88b0c68e0faa3c0944e70b41e7ab0e9411b047223d0fdd9f3089",
+      "reason": "New screen coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/laptop/tasks.png",
+      "sha256": "0e351589edf99a5293fc07dca62837a958c8639d9b14f57e4371ae66ecbe9856",
+      "reason": "New screen coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/search.png",
+      "sha256": "a778da165921e5a9215185eac909cc92e1540e9c201c054fffeb831e0e963a4e",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/task.png",
+      "sha256": "df5bdb641611e46df4c94e527846493c06178eefa9d1336cd73cd719877d893c",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/notifications.png",
+      "sha256": "0adde011429486a5160d9f8ec1908bd94ac8f8df1d28c07cd1f6bc2a488dd320",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/discuss.png",
+      "sha256": "98e46c7e275074004a423587f1ec0e76407c888a3bc5b6068a5723fc65fb0f7e",
+      "reason": "Reviewed UX2 change"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/projects.png",
+      "sha256": "88b2caec76cbbb9c85323098de88b6e071a036009958e7c2c93ddd520f3568e3",
+      "reason": "New screen coverage"
+    },
+    {
+      "path": "tests/visual/snapshots/ubuntu-24.04/mobile/tasks.png",
+      "sha256": "1bf29de9b5219dddc43e4796b1f3f7170d1db65802d4ae3f53432fbb73d77c38",
+      "reason": "New screen coverage"
+    }
+  ]
+}

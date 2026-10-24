@@ -2,7 +2,25 @@
 
 ## UX2 — 24/10/2026
 
-Typecheck, 15 unit và build production standalone đã chạy thành công. Integration mới: **30 passed, 0 failed, 0 skipped** trên Odoo17/Postgres16 thật. Lượt Chromium đầu: 36 passed/18 visual failed; cả **5 Odoo thật + 22 UI/accessibility** đều đạt. 18 visual khác gồm 12 ảnh UI thay đổi có chủ đích và 6 ảnh mới chưa có reference. Đã xem trước/sau và diff, cập nhật riêng reference Debian có provenance, giữ threshold50; lượt so sánh cuối và CI còn đang thực hiện tại commit này. Không coi lượt visual lỗi là pass.
+| Kiểm tra mới | Kết quả |
+|---|---|
+| Typecheck, unit, production build | Thành công; **15 unit passed**, không skipped |
+| Docker build mới | Thành công, `smart-workspace:local` sha256:c64cc3f8c25e6169c37b6bf3c71961053df9bf460bfddbc77ade4994dc0121b8; UID1000, không có .env.local, PDF worker được đóng gói và trả 200 |
+| Integration qua app Docker mới | **30 passed, 0 failed, 0 skipped**, Odoo17/Postgres16 thật |
+| Browser qua app Docker mới | **54 passed, 0 failed, 0 skipped**: 5 Odoo thật, 22 UI/accessibility fixture, 27 visual comparisons; chạy sau integration |
+| Tổng kiểm thử local mới | **99 passed** = 15 + 30 + 54; không dùng lại kết quả 76 cũ |
+| Dependency audit production | npm audit --omit=dev: **0 vulnerabilities** tại lúc kiểm tra |
+| Secret review | 0 exact matches của credential/key/DB URL local trong source candidates; [phạm vi và giới hạn](ux2-secret-review.json) |
+| Ubuntu renderer bổ sung | **27/27 visual passed**, Ubuntu24.04 container; giữ 9 reference không đổi, cập nhật 18 thay đổi/màn hình mới sau khi xem ảnh, threshold50 |
+| CI checkout mới | Xem [check theo SHA của PR #1](https://github.com/Phuongle29-01/odoo-workspace/pull/1/checks); tách kết quả local khỏi trạng thái CI |
+| Firefox | **6/6 UX2 UI fixture passed** trên Firefox157/build1555 trong Ubuntu24.04 container sau khi cài install-deps firefox. Host sandbox ban đầu không mở được profile; không coi lỗi khởi động đó là pass. Chưa có test Odoo thật riêng trên Firefox |
+| WebKit / Safari | WebKit2370 trên host thiếu GTK4/Graphene/Harfbuzz-ICU/Manette/Hyphen/GLES: **BLOCKED**; Safari/macOS thật chưa thử |
+
+Local source lúc build/kiểm thử: `25254550547db666176f32eb03f95ab58df8447f` (sau đó chỉ bổ sung báo cáo/reference renderer). Tổng chính vẫn 99, cộng sáu trường hợp Firefox thành **105 kiểm thử engine/case đạt**. Lượt 27 visual Ubuntu lặp cùng ca Chromium để kiểm tra renderer, không cộng thêm vào tổng này. Chạy thêm browser tùy chọn bằng `CROSS_BROWSER=1 npm run test:e2e -- --project=firefox` hoặc `--project=webkit` trên host có dependency; sáu trường hợp UX2 không thay bộ Chromium chính.
+
+Lượt Chromium đầu: 36 passed/18 visual failed; cả 5 Odoo thật + 22 UI/accessibility đều đạt. 18 visual khác gồm 12 ảnh UI thay đổi có chủ đích và 6 ảnh mới chưa có reference. Đã xem trước/sau/diff và cập nhật riêng reference Debian có provenance, giữ threshold50; lượt cuối trên Docker **54/54** là so sánh bình thường, không bật UPDATE_VISUALS. Một lượt trung gian bị ngắt ENOSPC khi Docker build tạo cache; đã dọn cache build của tác vụ, giữ image/volumes, rồi chạy lại integration và toàn bộ browser thành công như bảng trên.
+
+CI [40057573679](https://github.com/Phuongle29-01/odoo-workspace/actions/runs/40057573679) tại source2525455: typecheck/build, 15 unit, 30 integration và 27 browser functional/UI đạt; 18 visual failed do reference UX2 chưa cập nhật cho Ubuntu. Không xem run này là success. ZIP artifact bị proxy chặn ở hostname17; log run tải được. Đã dựng renderer Ubuntu riêng, đối chiếu glyph phím tắt và thêm fonts-dejavu-core như CI, mở ảnh thay đổi, rồi chạy 27/27 so sánh với reference giữ ngưỡng50. [Provenance](../tests/visual/snapshots/ubuntu-24.04/ux2-provenance.json) ghi rõ ảnh local Ubuntu, không giả nhận là ảnh tải từ CI. Kết quả CI sau commit reference xem check liên kết ở bảng trên.
 
 Xem [báo cáo UX2](ux2-report.md), [48 ảnh trước/sau](ux2/README.md), [performance raw](measurements/ux2-after.json), [phiếu ba nhân viên chưa chạy](ux2-user-study.md). Staging **BLOCKED**, không có xác minh doanh nghiệp mới. Kết quả 76 tests bên dưới là lịch sử.
 

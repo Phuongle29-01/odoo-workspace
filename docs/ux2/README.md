@@ -1,6 +1,6 @@
 # UX 2.0 — ảnh trước/sau
 
-Ngày 24/10/2026. 48 ảnh mở bằng Chromium 156 qua ứng dụng production, fixture browser cố định: 8 màn hình × 3 viewport × trước/sau. Đây là **MOCK ONLY** cho dữ liệu trong ảnh, không phải ảnh dữ liệu doanh nghiệp. API fixture chỉ nằm trong tests, không được đóng gói vào runtime. Before được chụp trước khi sửa UX2 tại HEAD `cbcb3ed`; after là ứng dụng UX2 đã build. Đã mở và quan sát ảnh/contact sheet, đồng thời xem ảnh đầy đủ các vùng tìm kiếm, nhiệm vụ và thông báo. Ảnh kiểm thử Odoo thật nằm trong artifact browser của PR, tách riêng khỏi fixture.
+Ngày 24/10/2026. 48 ảnh mở bằng Chromium 156 qua ứng dụng production, fixture browser cố định: 8 màn hình × 3 viewport × trước/sau. Đây là **MOCK ONLY** cho dữ liệu trong ảnh, không phải ảnh dữ liệu doanh nghiệp. API fixture chỉ nằm trong tests, không được đóng gói vào runtime. Before được chụp trước khi sửa UX2 tại HEAD `cbcb3ed`; after là ứng dụng UX2 đã build. Đã mở và quan sát ảnh/contact sheet, đồng thời xem ảnh đầy đủ các vùng tìm kiếm, nhiệm vụ và thông báo. Ảnh kiểm thử Odoo thật nằm trong [real-local](real-local) và artifact browser của PR, tách riêng khỏi fixture. Hai ảnh bổ sung dùng PDF/PNG tổng hợp, attachment upload thật vào task local; task/fixture đã dọn sau kiểm thử.
 
 | Viewport | Trước | Sau |
 |---|---|---|

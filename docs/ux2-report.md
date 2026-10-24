@@ -11,6 +11,8 @@ Nhánh `feature/odoo17-smart-workspace`; [PR #1](https://github.com/Phuongle29-0
 | 48 ảnh khảo sát trước/sau, visual và accessibility fixture | MOCK ONLY | [Bộ ảnh](ux2/README.md), dữ liệu tổng hợp browser, không phải dữ liệu doanh nghiệp |
 | Staging doanh nghiệp | BLOCKED | URL public/version đã biết; còn thiếu tên DB, xác nhận staging và hai danh tính test được ủy quyền |
 | Kiểm thử có người thật, ít nhất ba nhân viên | NOT STARTED | [Kịch bản và phiếu đo](ux2-user-study.md); chưa có điểm hay kết quả do người thử cung cấp |
+| Firefox UI fixture | DONE LOCAL | 6/6 ca UX2 đạt trên Firefox157 trong Ubuntu24.04 container; không phải kiểm thử doanh nghiệp |
+| WebKit cloud | BLOCKED | Host thiếu thư viện OS; không có kết quả pass |
 | Production và Safari thật | NOT STARTED | Không deploy, không seed/ghi doanh nghiệp; WebKit không tương đương nghiệm thu Safari/macOS |
 
 ## Các thay đổi chính
@@ -27,6 +29,8 @@ Nhánh `feature/odoo17-smart-workspace`; [PR #1](https://github.com/Phuongle29-0
 ## Kiểm thử mới
 
 Đã chạy mới trên production standalone: typecheck, 15 unit, build thành công; **30 integration đạt, 0 skipped** (không dùng số 27/76 cũ). Gồm tìm kiếm theo chỉ mục/phân trang/escape `%_`/rename, ACL thu hồi với user B, safe preview PDF/PNG/reject HTML/IDOR, children keyset, 85 notification và giới hạn RPC, cùng toàn bộ authentication/revision/idempotency/CSRF/timeout/reconnect cũ.
+
+**99 kiểm thử local bộ chính đạt** = 15 unit + 30 integration + 54 browser, không skipped. Bổ sung **6/6 Firefox UI fixture**, tổng 105 ca/engine đạt; 27 visual lặp trên renderer Ubuntu cũng đạt nhưng không cộng vào tổng. Docker image mới build thành công và chạy runtime UID1000, không đóng gói .env.local; cả integration/browser được chạy lại tuần tự qua image này.
 
 Browser Chromium chạy cả 5 kịch bản Odoo thật (gồm dữ liệu 1.100 task được tạo/dọn riêng, PDF/ảnh thật) và 22 UI/accessibility fixture, 27 visual comparisons. Trạng thái lượt hoàn chỉnh và CI cuối cùng được cập nhật trong [validation.md](validation.md). Baseline không cập nhật tự động; ảnh được xem trước khi thay có chủ đích cho giao diện UX2. Kiểm thử tự động không thay cho đánh giá bằng bàn phím/screen reader và người thật.
 
